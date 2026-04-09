@@ -23,14 +23,14 @@ export default function Hero() {
       <div className="relative z-10 flex flex-col items-center gap-6 text-center">
         {/* Logo */}
         <Image
-          src="/logo-seal.jpg"
-          alt="Groundhoge Day Economic Authority — Official Seal"
+          src="/logo-hoge.jpg"
+          alt="Groundhoge Day — $HOGE Coin"
           width={420}
           height={420}
           priority
           className="w-64 h-64 md:w-96 md:h-96 rounded-full"
           style={{
-            filter: "drop-shadow(0 0 40px rgba(255,170,0,0.15))",
+            filter: "drop-shadow(0 0 40px rgba(255,170,0,0.25))",
           }}
         />
 

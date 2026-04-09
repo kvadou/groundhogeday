@@ -1,5 +1,7 @@
 "use client";
 
+import WalletButton from "./WalletButton";
+
 export default function TickerBar() {
   const lastEmergence = new Date("2026-02-02");
   const now = new Date();
@@ -11,17 +13,25 @@ export default function TickerBar() {
 
   return (
     <div
-      className="fixed top-0 left-0 right-0 z-50 overflow-hidden"
+      className="fixed top-0 left-0 right-0 z-50 flex items-center"
       style={{
-        height: 28,
+        height: 36,
         background: "#0a0a0f",
         borderBottom: "1px solid #1a1a2e",
         fontFamily: "var(--font-mono)",
       }}
     >
-      <div className="ticker-track flex items-center h-full whitespace-nowrap text-xs" style={{ color: "#ffaa00" }}>
-        <span className="px-4">{content}</span>
-        <span className="px-4">{content}</span>
+      {/* Scrolling ticker */}
+      <div className="flex-1 overflow-hidden h-full">
+        <div className="ticker-track flex items-center h-full whitespace-nowrap text-xs" style={{ color: "#ffaa00" }}>
+          <span className="px-4">{content}</span>
+          <span className="px-4">{content}</span>
+        </div>
+      </div>
+
+      {/* Wallet button — right side */}
+      <div className="flex-shrink-0 px-3">
+        <WalletButton />
       </div>
 
       <style jsx>{`
