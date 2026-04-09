@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import CountdownClock from "./CountdownClock";
 
 export default function Hero() {
@@ -21,20 +22,20 @@ export default function Hero() {
 
       <div className="relative z-10 flex flex-col items-center gap-6 text-center">
         {/* Logo */}
-        <h1
-          className="text-4xl md:text-5xl tracking-wider uppercase"
-          style={{ fontFamily: "var(--font-serif)" }}
-        >
-          GROUNDHOGE DAY
-        </h1>
+        <Image
+          src="/logo-seal.jpg"
+          alt="Groundhoge Day Economic Authority — Official Seal"
+          width={420}
+          height={420}
+          priority
+          className="w-64 h-64 md:w-96 md:h-96 rounded-full"
+          style={{
+            filter: "drop-shadow(0 0 40px rgba(255,170,0,0.15))",
+          }}
+        />
 
-        {/* Token name */}
-        <span
-          className="text-lg -mt-4"
-          style={{ fontFamily: "var(--font-mono)", color: "#ffaa00" }}
-        >
-          $HOGE
-        </span>
+        {/* Visually hidden h1 for SEO */}
+        <h1 className="sr-only">Groundhoge Day — $HOGE</h1>
 
         {/* Tagline */}
         <p
