@@ -1,0 +1,568 @@
+{
+  "address": "4TJmU197oWhxmjSq5LR8fSvcgy3i6drXhP5zhNzKi9zi",
+  "metadata": {
+    "name": "groundhoge_burrow",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "The Burrow — Groundhoge Day AMM pool ($HOGE/SOL)"
+  },
+  "instructions": [
+    {
+      "name": "create_pool",
+      "docs": [
+        "Step 1: Create the pool state. Vaults are created client-side beforehand."
+      ],
+      "discriminator": [
+        233,
+        146,
+        209,
+        142,
+        207,
+        104,
+        64,
+        188
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  117,
+                  114,
+                  114,
+                  111,
+                  119,
+                  45,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "hoge_mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  117,
+                  114,
+                  114,
+                  111,
+                  119,
+                  45,
+                  97,
+                  117,
+                  116,
+                  104
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "hoge_mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "hoge_mint"
+        },
+        {
+          "name": "wsol_mint"
+        },
+        {
+          "name": "vault_hoge"
+        },
+        {
+          "name": "vault_wsol"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "swap_hoge_for_sol",
+      "docs": [
+        "Swap $HOGE for SOL (sell)."
+      ],
+      "discriminator": [
+        124,
+        100,
+        162,
+        246,
+        124,
+        240,
+        191,
+        52
+      ],
+      "accounts": [
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  117,
+                  114,
+                  114,
+                  111,
+                  119,
+                  45,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "hoge_mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  117,
+                  114,
+                  114,
+                  111,
+                  119,
+                  45,
+                  97,
+                  117,
+                  116,
+                  104
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "hoge_mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "hoge_mint"
+        },
+        {
+          "name": "wsol_mint"
+        },
+        {
+          "name": "vault_hoge",
+          "writable": true
+        },
+        {
+          "name": "vault_wsol",
+          "writable": true
+        },
+        {
+          "name": "user_hoge",
+          "writable": true
+        },
+        {
+          "name": "user_wsol",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "token_2022_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        }
+      ],
+      "args": [
+        {
+          "name": "hoge_in",
+          "type": "u64"
+        },
+        {
+          "name": "min_sol_out",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "swap_sol_for_hoge",
+      "docs": [
+        "Swap SOL for $HOGE (buy)."
+      ],
+      "discriminator": [
+        156,
+        239,
+        180,
+        29,
+        239,
+        165,
+        238,
+        78
+      ],
+      "accounts": [
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  117,
+                  114,
+                  114,
+                  111,
+                  119,
+                  45,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "hoge_mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  117,
+                  114,
+                  114,
+                  111,
+                  119,
+                  45,
+                  97,
+                  117,
+                  116,
+                  104
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "hoge_mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "hoge_mint"
+        },
+        {
+          "name": "wsol_mint"
+        },
+        {
+          "name": "vault_hoge",
+          "writable": true
+        },
+        {
+          "name": "vault_wsol",
+          "writable": true
+        },
+        {
+          "name": "user_wsol",
+          "writable": true
+        },
+        {
+          "name": "user_hoge",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "token_2022_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        }
+      ],
+      "args": [
+        {
+          "name": "sol_in",
+          "type": "u64"
+        },
+        {
+          "name": "min_hoge_out",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "sync_reserves",
+      "docs": [
+        "Step 2: Sync reserves from actual vault balances.",
+        "Admin transfers tokens directly to vaults, then calls this to update pool state."
+      ],
+      "discriminator": [
+        28,
+        30,
+        78,
+        31,
+        95,
+        31,
+        176,
+        244
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  117,
+                  114,
+                  114,
+                  111,
+                  119,
+                  45,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool.hoge_mint",
+                "account": "Pool"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_hoge",
+          "docs": [
+            "Vault $HOGE — read balance"
+          ]
+        },
+        {
+          "name": "vault_wsol",
+          "docs": [
+            "Vault WSOL — read balance"
+          ]
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Pool",
+      "discriminator": [
+        241,
+        154,
+        109,
+        4,
+        17,
+        177,
+        109,
+        188
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "SwapEvent",
+      "discriminator": [
+        64,
+        198,
+        205,
+        232,
+        38,
+        8,
+        113,
+        226
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidAmount",
+      "msg": "Invalid amount"
+    },
+    {
+      "code": 6001,
+      "name": "InsufficientLiquidity",
+      "msg": "Insufficient liquidity"
+    },
+    {
+      "code": 6002,
+      "name": "SlippageExceeded",
+      "msg": "Slippage exceeded"
+    },
+    {
+      "code": 6003,
+      "name": "MathOverflow",
+      "msg": "Math overflow"
+    },
+    {
+      "code": 6004,
+      "name": "Unauthorized",
+      "msg": "Unauthorized"
+    }
+  ],
+  "types": [
+    {
+      "name": "Pool",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "hoge_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "wsol_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault_hoge",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault_wsol",
+            "type": "pubkey"
+          },
+          {
+            "name": "hoge_reserve",
+            "type": "u64"
+          },
+          {
+            "name": "sol_reserve",
+            "type": "u64"
+          },
+          {
+            "name": "total_volume",
+            "type": "u64"
+          },
+          {
+            "name": "total_swaps",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "authority_bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SwapDirection",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Buy"
+          },
+          {
+            "name": "Sell"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SwapEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "direction",
+            "type": {
+              "defined": {
+                "name": "SwapDirection"
+              }
+            }
+          },
+          {
+            "name": "amount_in",
+            "type": "u64"
+          },
+          {
+            "name": "amount_out",
+            "type": "u64"
+          },
+          {
+            "name": "hoge_reserve",
+            "type": "u64"
+          },
+          {
+            "name": "sol_reserve",
+            "type": "u64"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
+import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { predictions, getMarketImpact } from "@/lib/shadow-history";
 import type { Prediction } from "@/lib/shadow-history";
 import { useInView } from "@/hooks/useInView";
+import { getSwapQuote, getPoolReserves, executeSwap } from "@/lib/swap";
+import { formatHoge, formatSol } from "@/lib/solana";
 
 function getOutcome(p: Prediction): string {
   if (p.shadow === null) return "NO CEREMONY";
@@ -55,9 +58,103 @@ function ProgressBar({ days, total }: { days: number; total: number }) {
   );
 }
 
+interface TermLine {
+  prompt: boolean;
+  text: string;
+  color?: string;
+}
+
 export default function OracleTerminal() {
   const [expanded, setExpanded] = useState(false);
   const [ref, isInView] = useInView();
+  const { publicKey, connected, signTransaction } = useWallet();
+  const { connection } = useConnection();
+  const [cmdInput, setCmdInput] = useState("");
+  const [termLines, setTermLines] = useState<TermLine[]>([]);
+  const [processing, setProcessing] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const addLine = useCallback((text: string, color?: string, prompt = false) => {
+    setTermLines((prev) => [...prev, { prompt, text, color }]);
+  }, []);
+
+  const handleCommand = useCallback(async (raw: string) => {
+    const input = raw.trim().toLowerCase();
+    if (!input) return;
+
+    addLine(input, "#ffaa00", true);
+    setProcessing(true);
+
+    try {
+      if (input === "help") {
+        addLine("AVAILABLE COMMANDS:", "#00ff88");
+        addLine("  buy <sol_amount>              — Buy $HOGE with SOL");
+        addLine("  sell <hoge_amount>            — Sell $HOGE for SOL");
+        addLine("  quote buy|sell <amount>       — Preview without executing");
+        addLine("  reserves                      — Show pool reserves");
+        addLine("  help                          — This message");
+        addLine("  Append 'slippage <pct>' to set custom slippage (default 1%)");
+      } else if (input === "reserves") {
+        const r = await getPoolReserves(connection);
+        addLine(`HOGE VAULT: ${formatHoge(r.hogeReserve)} $HOGE`, "#ffaa00");
+        addLine(`SOL VAULT:  ${formatSol(r.solReserve)} SOL`, "#00ff88");
+      } else if (input.startsWith("quote ")) {
+        const parts = input.split(/\s+/);
+        const dir = parts[1] as "buy" | "sell";
+        const amt = parseFloat(parts[2]);
+        if (!["buy", "sell"].includes(dir) || isNaN(amt) || amt <= 0) {
+          addLine("USAGE: quote buy|sell <amount>", "#ff4444");
+        } else {
+          const r = await getPoolReserves(connection);
+          let slip = 100;
+          const slipIdx = parts.indexOf("slippage");
+          if (slipIdx !== -1) slip = parseFloat(parts[slipIdx + 1]) * 100 || 100;
+          const q = getSwapQuote(dir, amt, r.hogeReserve, r.solReserve, slip);
+          const outLabel = dir === "buy" ? "$HOGE" : "SOL";
+          const inLabel = dir === "buy" ? "SOL" : "$HOGE";
+          addLine(`${dir.toUpperCase()} ${amt} ${inLabel}`, "#ffaa00");
+          addLine(`  EST. OUTPUT:    ${dir === "buy" ? formatHoge(q.estimatedOutRaw) : formatSol(q.estimatedOutRaw)} ${outLabel}`, "#00ff88");
+          addLine(`  MIN. OUTPUT:    ${dir === "buy" ? formatHoge(q.minOutRaw) : formatSol(q.minOutRaw)} ${outLabel}`);
+          addLine(`  PRICE IMPACT:   ${q.priceImpact.toFixed(2)}%`);
+          addLine(`  FEE (0.3%):     ${q.fee.toFixed(6)} ${inLabel}`);
+        }
+      } else if (input.startsWith("buy ") || input.startsWith("sell ")) {
+        if (!connected || !publicKey || !signTransaction) {
+          addLine("ERROR: Connect wallet first.", "#ff4444");
+        } else {
+          const parts = input.split(/\s+/);
+          const dir = parts[0] as "buy" | "sell";
+          const amt = parseFloat(parts[1]);
+          if (isNaN(amt) || amt <= 0) {
+            addLine(`USAGE: ${dir} <amount>`, "#ff4444");
+          } else {
+            const r = await getPoolReserves(connection);
+            let slip = 100;
+            const slipIdx = parts.indexOf("slippage");
+            if (slipIdx !== -1) slip = parseFloat(parts[slipIdx + 1]) * 100 || 100;
+            const q = getSwapQuote(dir, amt, r.hogeReserve, r.solReserve, slip);
+            const outLabel = dir === "buy" ? "$HOGE" : "SOL";
+            addLine(`EXECUTING ${dir.toUpperCase()}: ${amt} → ~${dir === "buy" ? formatHoge(q.estimatedOutRaw) : formatSol(q.estimatedOutRaw)} ${outLabel}...`, "#ffaa00");
+            const sig = await executeSwap(
+              connection,
+              { publicKey, signTransaction },
+              dir,
+              q.amountInRaw,
+              q.minOutRaw,
+            );
+            addLine(`SWAP COMPLETE. TX: ${sig.slice(0, 20)}...`, "#00ff88");
+            addLine(`https://explorer.solana.com/tx/${sig}?cluster=devnet`, "#4488ff");
+          }
+        }
+      } else {
+        addLine(`UNKNOWN COMMAND: ${input}. Type 'help' for commands.`, "#ff4444");
+      }
+    } catch (err: any) {
+      addLine(`ERROR: ${err.message || "Command failed"}`, "#ff4444");
+    }
+
+    setProcessing(false);
+  }, [connection, connected, publicKey, signTransaction, addLine]);
 
   const sorted = [...predictions].sort((a, b) => b.year - a.year);
   const displayData = expanded ? sorted : sorted.slice(0, 15);
@@ -170,9 +267,34 @@ export default function OracleTerminal() {
               <ProgressBar days={days} total={total} />
             </span>
           </div>
-          <div>
+          {/* Command history */}
+          {termLines.map((line, i) => (
+            <div key={i}>
+              {line.prompt && (
+                <span className="text-[#00ff88]">gobbler-knob:~ $ </span>
+              )}
+              <span style={{ color: line.color || "#e8e6e3" }}>{line.text}</span>
+            </div>
+          ))}
+          {/* Interactive input */}
+          <div className="flex items-center">
             <span className="text-[#00ff88]">gobbler-knob:~ $ </span>
-            <span className="animate-blink text-[#ffaa00]">_</span>
+            <input
+              ref={inputRef}
+              type="text"
+              value={cmdInput}
+              onChange={(e) => setCmdInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !processing) {
+                  handleCommand(cmdInput);
+                  setCmdInput("");
+                }
+              }}
+              disabled={processing}
+              placeholder={processing ? "processing..." : "type 'help' for commands"}
+              className="flex-1 bg-transparent outline-none text-[#ffaa00] placeholder-[#333]"
+              style={{ fontFamily: "var(--font-mono)", fontSize: "inherit", caretColor: "#ffaa00" }}
+            />
           </div>
         </div>
       </div>
