@@ -47,13 +47,13 @@ export default function CountdownClock() {
         {["DAYS", "HOURS", "MINUTES", "SECONDS"].map((label, i) => (
           <div key={label} className="flex items-center gap-2 md:gap-4">
             {i > 0 && (
-              <span className="text-4xl md:text-6xl" style={{ color: "#666666" }}>
+              <span className="text-2xl md:text-4xl lg:text-6xl" style={{ color: "#666666" }}>
                 :
               </span>
             )}
             <div className="flex flex-col items-center">
               <span
-                className="text-6xl md:text-8xl font-bold"
+                className="text-4xl md:text-6xl lg:text-8xl font-bold"
                 style={{
                   color: "#00ff88",
                   textShadow: "0 0 30px rgba(0,255,136,0.3)",
@@ -77,7 +77,7 @@ export default function CountdownClock() {
   if (timeLeft === null) {
     return (
       <div
-        className="text-4xl md:text-6xl font-bold tracking-wider text-center"
+        className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-wider text-center"
         style={{
           fontFamily: "var(--font-serif)",
           color: "#00ff88",
@@ -105,7 +105,7 @@ export default function CountdownClock() {
         <div key={seg.label} className="flex items-center gap-2 md:gap-4">
           {i > 0 && (
             <span
-              className="text-4xl md:text-6xl font-light"
+              className="text-2xl md:text-4xl lg:text-6xl font-light"
               style={{ color: "#666666" }}
             >
               :
@@ -113,7 +113,7 @@ export default function CountdownClock() {
           )}
           <div className="flex flex-col items-center">
             <span
-              className={`text-6xl md:text-8xl font-bold tabular-nums ${
+              className={`text-4xl md:text-6xl lg:text-8xl font-bold tabular-nums ${
                 seg.label === "SECONDS" ? "animate-pulse-subtle" : ""
               }`}
               style={{

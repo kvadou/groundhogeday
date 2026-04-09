@@ -1,6 +1,11 @@
+"use client";
+
+import { useInView } from "@/hooks/useInView";
+
 export default function Community() {
+  const [ref, isInView] = useInView();
   return (
-    <section className="py-24 max-w-6xl mx-auto px-6">
+    <section ref={ref} className={`py-24 max-w-6xl mx-auto px-6 fade-in-section ${isInView ? "is-visible" : ""}`}>
       <h2
         className="text-center tracking-[0.3em] text-sm text-[#666666] uppercase"
         style={{ fontFamily: "var(--font-serif)" }}

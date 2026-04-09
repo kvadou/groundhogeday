@@ -51,7 +51,7 @@ export default function Hero() {
 
         {/* Oracle status */}
         <div
-          className="flex items-center gap-2 text-xs md:text-sm"
+          className="flex flex-wrap justify-center items-center gap-2 text-xs md:text-sm"
           style={{ fontFamily: "var(--font-mono)", color: "#666666" }}
         >
           <span>Oracle status:</span>
@@ -63,7 +63,7 @@ export default function Hero() {
             }}
           />
           <span style={{ color: "#00ff88" }}>HIBERNATING</span>
-          <span className="mx-1">&middot;</span>
+          <span className="mx-1 hidden md:inline">&middot;</span>
           <span>Next emergence: February 2, 2027, 7:25 AM EST</span>
         </div>
 

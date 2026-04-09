@@ -1,4 +1,9 @@
+"use client";
+
+import { useInView } from "@/hooks/useInView";
+
 export default function Prophecy() {
+  const [ref, isInView] = useInView();
   const shadowBullets = [
     "Circulating supply reduced by 6.00% via autonomous burn protocol",
     "Sell taxes elevated to simulate adverse winter market conditions",
@@ -14,7 +19,7 @@ export default function Prophecy() {
   ];
 
   return (
-    <section id="prophecy" className="py-24 max-w-6xl mx-auto px-6">
+    <section ref={ref} id="prophecy" className={`py-24 max-w-6xl mx-auto px-6 fade-in-section ${isInView ? "is-visible" : ""}`}>
       {/* Classification header */}
       <div className="text-center">
         <span

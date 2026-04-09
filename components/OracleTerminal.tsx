@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { predictions, getMarketImpact } from "@/lib/shadow-history";
 import type { Prediction } from "@/lib/shadow-history";
+import { useInView } from "@/hooks/useInView";
 
 function getOutcome(p: Prediction): string {
   if (p.shadow === null) return "NO CEREMONY";
@@ -56,6 +57,7 @@ function ProgressBar({ days, total }: { days: number; total: number }) {
 
 export default function OracleTerminal() {
   const [expanded, setExpanded] = useState(false);
+  const [ref, isInView] = useInView();
 
   const sorted = [...predictions].sort((a, b) => b.year - a.year);
   const displayData = expanded ? sorted : sorted.slice(0, 15);
@@ -66,8 +68,9 @@ export default function OracleTerminal() {
 
   return (
     <section
+      ref={ref}
       style={{ backgroundColor: "#060610", borderTop: "1px solid #1a1a2e" }}
-      className="w-full py-24"
+      className={`w-full py-24 fade-in-section ${isInView ? "is-visible" : ""}`}
     >
       {/* Header */}
       <h2
@@ -78,62 +81,64 @@ export default function OracleTerminal() {
       </h2>
 
       {/* Data Table */}
-      <div className="mt-12 max-w-5xl mx-auto px-6" style={mono}>
-        {/* Column Headers */}
-        <div
-          className="grid grid-cols-5 text-xs text-[#666666] uppercase pb-2"
-          style={{ borderBottom: "1px solid #1a1a2e" }}
-        >
-          <span>YEAR</span>
-          <span>OUTCOME</span>
-          <span>DURATION</span>
-          <span>ACCURACY</span>
-          <span>MARKET IMPACT</span>
+      <div className="mt-12 max-w-5xl mx-auto px-6 overflow-x-auto" style={mono}>
+        <div className="min-w-[500px]">
+          {/* Column Headers */}
+          <div
+            className="grid grid-cols-5 text-xs text-[#666666] uppercase pb-2"
+            style={{ borderBottom: "1px solid #1a1a2e" }}
+          >
+            <span>YEAR</span>
+            <span>OUTCOME</span>
+            <span>DURATION</span>
+            <span>ACCURACY</span>
+            <span>MARKET IMPACT</span>
+          </div>
+
+          {/* Rows */}
+          <div
+            className={expanded ? "max-h-96 overflow-y-auto" : ""}
+            style={{
+              scrollbarColor: "#1a1a2e #060610",
+            }}
+          >
+            {displayData.map((p) => {
+              const is1943 = p.shadow === null;
+              const isNoShadow = p.shadow === false;
+              const is2026 = p.year === 2026;
+
+              let rowColor = "text-[#ffaa00]"; // shadow
+              if (isNoShadow) rowColor = "text-[#00ff88]";
+              if (is1943) rowColor = "text-red-500";
+
+              return (
+                <div
+                  key={p.year}
+                  className={`grid grid-cols-5 text-xs py-1.5 ${rowColor} ${
+                    is2026 ? "border-l-2 border-[#ffaa00] pl-2" : ""
+                  }`}
+                >
+                  <span>{p.year}</span>
+                  <span>{getOutcome(p)}</span>
+                  <span>{getDuration(p)}</span>
+                  <span>{getAccuracyLabel(p)}</span>
+                  <span>{getMarketImpact(p.shadow)}</span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Expand / Collapse */}
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="mt-4 text-xs text-[#4488ff] hover:text-[#6699ff] transition-colors cursor-pointer"
+            style={mono}
+          >
+            {expanded
+              ? "COLLAPSE ARCHIVE"
+              : "EXPAND FULL ARCHIVE (1887\u20132026)"}
+          </button>
         </div>
-
-        {/* Rows */}
-        <div
-          className={expanded ? "max-h-96 overflow-y-auto" : ""}
-          style={{
-            scrollbarColor: "#1a1a2e #060610",
-          }}
-        >
-          {displayData.map((p) => {
-            const is1943 = p.shadow === null;
-            const isNoShadow = p.shadow === false;
-            const is2026 = p.year === 2026;
-
-            let rowColor = "text-[#ffaa00]"; // shadow
-            if (isNoShadow) rowColor = "text-[#00ff88]";
-            if (is1943) rowColor = "text-red-500";
-
-            return (
-              <div
-                key={p.year}
-                className={`grid grid-cols-5 text-xs py-1.5 ${rowColor} ${
-                  is2026 ? "border-l-2 border-[#ffaa00] pl-2" : ""
-                }`}
-              >
-                <span>{p.year}</span>
-                <span>{getOutcome(p)}</span>
-                <span>{getDuration(p)}</span>
-                <span>{getAccuracyLabel(p)}</span>
-                <span>{getMarketImpact(p.shadow)}</span>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Expand / Collapse */}
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="mt-4 text-xs text-[#4488ff] hover:text-[#6699ff] transition-colors cursor-pointer"
-          style={mono}
-        >
-          {expanded
-            ? "COLLAPSE ARCHIVE"
-            : "EXPAND FULL ARCHIVE (1887\u20132026)"}
-        </button>
       </div>
 
       {/* Terminal Prompt Block */}
