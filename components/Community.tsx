@@ -69,6 +69,22 @@ export default function Community() {
               </a>
             </li>
             <li>
+              <Link
+                href="/legends"
+                className="text-sm text-[#e8e6e3] hover:text-[#ffaa00] transition-colors"
+              >
+                Legends &amp; Lore
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/prophecy-archives"
+                className="text-sm text-[#e8e6e3] hover:text-[#ffaa00] transition-colors"
+              >
+                Prophecy Archives
+              </Link>
+            </li>
+            <li>
               <a
                 href="#"
                 className="text-sm text-[#e8e6e3] hover:text-[#ffaa00] transition-colors"
