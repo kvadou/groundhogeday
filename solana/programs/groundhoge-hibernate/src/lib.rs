@@ -406,6 +406,52 @@ pub mod groundhoge_hibernate {
         msg!("Admin transferred to {}", config.admin);
         Ok(())
     }
+
+    /// One-time migration: resize HibernateConfig to include new fields (paused, pending_admin).
+    /// Uses UncheckedAccount because the old layout can't deserialize into the new struct.
+    pub fn migrate_config(ctx: Context<MigrateConfig>) -> Result<()> {
+        let config_ai = ctx.accounts.config.to_account_info();
+
+        // Validate admin from raw data (admin is first field after 8-byte discriminator)
+        let data = config_ai.try_borrow_data()?;
+        let stored_admin = Pubkey::try_from(&data[8..40]).map_err(|_| HibernateError::Unauthorized)?;
+        require!(ctx.accounts.admin.key() == stored_admin, HibernateError::Unauthorized);
+        drop(data);
+
+        let new_size = 8 + HibernateConfig::INIT_SPACE;
+        let rent = Rent::get()?;
+        let new_min_balance = rent.minimum_balance(new_size);
+        let current_balance = config_ai.lamports();
+
+        // Fund extra rent if needed (must happen before realloc)
+        if current_balance < new_min_balance {
+            let diff = new_min_balance - current_balance;
+            anchor_lang::system_program::transfer(
+                CpiContext::new(
+                    ctx.accounts.system_program.to_account_info(),
+                    anchor_lang::system_program::Transfer {
+                        from: ctx.accounts.admin.to_account_info(),
+                        to: config_ai.clone(),
+                    },
+                ),
+                diff,
+            )?;
+        }
+
+        // Reallocate
+        config_ai.realloc(new_size, false)?;
+
+        // Set new fields: paused = false, pending_admin = Pubkey::default (zeros)
+        // These are at the end of the struct after the existing fields.
+        let mut data = config_ai.try_borrow_mut_data()?;
+        // old_size = new_size minus paused(1) and pending_admin(32)
+        let old_size = new_size - 1 - 32;
+        data[old_size] = 0; // paused = false
+        data[old_size + 1..old_size + 1 + 32].fill(0); // pending_admin = Pubkey::default
+
+        msg!("HibernateConfig migrated — paused and pending_admin initialized");
+        Ok(())
+    }
 }
 
 // ── Account Contexts ──────────────────────────────────────────────────
@@ -600,6 +646,23 @@ pub struct AcceptAdmin<'info> {
 
     #[account(mut, seeds = [CONFIG_SEED], bump = config.bump)]
     pub config: Account<'info, HibernateConfig>,
+}
+
+#[derive(Accounts)]
+pub struct MigrateConfig<'info> {
+    #[account(mut)]
+    pub admin: Signer<'info>,
+
+    /// CHECK: Can't deserialize old layout. Validated by seeds + owner + admin check in handler.
+    #[account(
+        mut,
+        seeds = [CONFIG_SEED],
+        bump,
+        owner = crate::ID,
+    )]
+    pub config: UncheckedAccount<'info>,
+
+    pub system_program: Program<'info, System>,
 }
 
 // ── State ─────────────────────────────────────────────────────────────

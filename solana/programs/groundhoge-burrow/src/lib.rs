@@ -199,6 +199,49 @@ pub mod groundhoge_burrow {
         msg!("Pool paused: {}", paused);
         Ok(())
     }
+
+    /// One-time migration: resize Pool account to include new fields (paused).
+    /// Uses UncheckedAccount because the old layout can't deserialize into the new Pool struct.
+    pub fn migrate_pool(ctx: Context<MigratePool>) -> Result<()> {
+        let pool_ai = ctx.accounts.pool.to_account_info();
+
+        // Validate admin from raw data (admin is first field after 8-byte discriminator)
+        let data = pool_ai.try_borrow_data()?;
+        let stored_admin = Pubkey::try_from(&data[8..40]).map_err(|_| BurrowError::Unauthorized)?;
+        require!(ctx.accounts.admin.key() == stored_admin, BurrowError::Unauthorized);
+        drop(data);
+
+        let new_size = 8 + Pool::INIT_SPACE;
+        let rent = Rent::get()?;
+        let new_min_balance = rent.minimum_balance(new_size);
+        let current_balance = pool_ai.lamports();
+
+        // Fund extra rent if needed (must happen before realloc)
+        if current_balance < new_min_balance {
+            let diff = new_min_balance - current_balance;
+            anchor_lang::system_program::transfer(
+                CpiContext::new(
+                    ctx.accounts.system_program.to_account_info(),
+                    anchor_lang::system_program::Transfer {
+                        from: ctx.accounts.admin.to_account_info(),
+                        to: pool_ai.clone(),
+                    },
+                ),
+                diff,
+            )?;
+        }
+
+        // Reallocate
+        pool_ai.realloc(new_size, false)?;
+
+        // Set paused = false at the end of the account data
+        let mut data = pool_ai.try_borrow_mut_data()?;
+        let paused_offset = new_size - 1; // paused is the last field
+        data[paused_offset] = 0; // paused = false
+
+        msg!("Pool migrated — paused field initialized to false");
+        Ok(())
+    }
 }
 
 // ── CPI Helper ────────────────────────────────────────────────────────
@@ -401,6 +444,26 @@ pub struct AdminAction<'info> {
 
     #[account(mut, seeds = [POOL_SEED, pool.hoge_mint.as_ref()], bump = pool.bump)]
     pub pool: Account<'info, Pool>,
+}
+
+#[derive(Accounts)]
+pub struct MigratePool<'info> {
+    #[account(mut)]
+    pub admin: Signer<'info>,
+
+    /// CHECK: Can't deserialize old layout. Validated by seeds + owner + admin check in handler.
+    #[account(
+        mut,
+        seeds = [POOL_SEED, hoge_mint.key().as_ref()],
+        bump,
+        owner = crate::ID,
+    )]
+    pub pool: UncheckedAccount<'info>,
+
+    /// CHECK: Needed for PDA derivation
+    pub hoge_mint: UncheckedAccount<'info>,
+
+    pub system_program: Program<'info, System>,
 }
 
 // ── State ──────────────────────────────────────────────────────────────
