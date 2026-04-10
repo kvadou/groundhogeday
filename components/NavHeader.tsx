@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { label: "LEGENDS", href: "/legends", hash: false },
   { label: "ARCHIVES", href: "/prophecy-archives", hash: false },
   { label: "HIBERNATE", href: "/hibernate", hash: false },
+  { label: "CARDS", href: "/cards", hash: false },
 ] as const;
 
 export default function NavHeader() {
