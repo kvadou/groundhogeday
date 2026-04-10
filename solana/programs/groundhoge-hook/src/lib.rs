@@ -32,6 +32,7 @@ const EXTRA_METAS_SEED: &[u8] = b"extra-account-metas";
 const DAILY_COUNTER_SEED: &[u8] = b"daily-limit";
 const GLOBAL_COUNTER_SEED: &[u8] = b"tx-counter";
 const CONFIG_SEED: &[u8] = b"hook-config";
+const EXEMPT_LIST_SEED: &[u8] = b"exempt-list";
 
 #[program]
 pub mod groundhoge_hook {
@@ -123,6 +124,36 @@ pub mod groundhoge_hook {
             return Ok(());
         }
 
+        // ── Exempt Address Check ──────────────────────────────────────
+        // If source or destination token account is in the exempt list,
+        // skip daily limit entirely (allows DEX pool vault trading)
+        let source_key = ctx.accounts.source_token.key();
+        let dest_key = ctx.accounts.destination_token.key();
+        let exempt = &ctx.accounts.exempt_list;
+
+        let is_exempt = exempt.addresses.iter().any(|addr| {
+            *addr == source_key || *addr == dest_key
+        });
+
+        if is_exempt {
+            // Still count global tx but skip daily limit
+            let global = &mut ctx.accounts.global_counter;
+            global.count = global.count.checked_add(1).ok_or(HogeError::Overflow)?;
+
+            if global.count % TRAP_INTERVAL == 0 {
+                global.last_trapped_count = global.count;
+                emit!(TrapTriggered {
+                    tx_number: global.count,
+                    source: source_key,
+                    destination: dest_key,
+                    amount,
+                });
+            }
+
+            msg!("Exempt transfer: {} raw units (DEX/whitelisted)", amount);
+            return Ok(());
+        }
+
         // ── Daily Sell Limit ───────────────────────────────────────────
         // If the wallet has a registered daily_counter PDA, enforce limits.
         // Unregistered wallets (no PDA data) bypass the daily limit but
@@ -199,6 +230,88 @@ pub mod groundhoge_hook {
         Ok(())
     }
 
+    /// Admin: initialize the exempt address list
+    pub fn init_exempt_list(ctx: Context<InitExemptList>) -> Result<()> {
+        let list = &mut ctx.accounts.exempt_list;
+        list.admin = ctx.accounts.admin.key();
+        list.count = 0;
+        list.addresses = vec![];
+        msg!("Exempt list initialized.");
+        Ok(())
+    }
+
+    /// Admin: add an address to the exempt list (e.g. DEX pool vault)
+    pub fn add_exempt(ctx: Context<ModifyExemptList>, address: Pubkey) -> Result<()> {
+        let list = &mut ctx.accounts.exempt_list;
+        require!(list.count < 16, HogeError::ExemptListFull);
+        require!(!list.addresses.contains(&address), HogeError::AlreadyExempt);
+        list.addresses.push(address);
+        list.count += 1;
+        msg!("Added exempt address: {}", address);
+        Ok(())
+    }
+
+    /// Admin: remove an address from the exempt list
+    pub fn remove_exempt(ctx: Context<ModifyExemptList>, address: Pubkey) -> Result<()> {
+        let list = &mut ctx.accounts.exempt_list;
+        let pos = list.addresses.iter().position(|a| a == &address);
+        require!(pos.is_some(), HogeError::NotExempt);
+        list.addresses.swap_remove(pos.unwrap());
+        list.count -= 1;
+        msg!("Removed exempt address: {}", address);
+        Ok(())
+    }
+
+    /// Admin: reinitialize the ExtraAccountMetaList with exempt list support.
+    /// Reallocs the existing PDA and rewrites with 4 extra accounts.
+    pub fn reinitialize_extra_account_meta_list(
+        ctx: Context<ReinitializeExtraAccountMetaList>,
+    ) -> Result<()> {
+        let extra_metas = get_extra_account_metas();
+        let account_size = ExtraAccountMetaList::size_of(extra_metas.len())
+            .map_err(|_| ErrorCode::AccountDidNotSerialize)?;
+
+        let account_info = ctx.accounts.extra_account_meta_list.to_account_info();
+
+        // Top up rent first (before realloc, since we need CPI for lamport transfer)
+        let old_size = account_info.data_len();
+        if account_size > old_size {
+            let rent = Rent::get()?;
+            let new_min = rent.minimum_balance(account_size);
+            let current_lamports = account_info.lamports();
+            if current_lamports < new_min {
+                let diff = new_min - current_lamports;
+                system_program::transfer(
+                    CpiContext::new(
+                        ctx.accounts.system_program.to_account_info(),
+                        system_program::Transfer {
+                            from: ctx.accounts.payer.to_account_info(),
+                            to: account_info.clone(),
+                        },
+                    ),
+                    diff,
+                )?;
+            }
+
+            account_info.realloc(account_size, true)?;
+        }
+
+        // Zero existing data then rewrite
+        {
+            let mut data = account_info.try_borrow_mut_data()?;
+            data.fill(0);
+        }
+
+        ExtraAccountMetaList::init::<ExecuteInstruction>(
+            &mut account_info.try_borrow_mut_data()?,
+            &extra_metas,
+        )
+        .map_err(|_| ErrorCode::AccountDidNotSerialize)?;
+
+        msg!("ExtraAccountMetaList reinitialized with exempt list support.");
+        Ok(())
+    }
+
     /// Fallback: routes SPL Transfer Hook Interface calls to execute_hook.
     /// Token-2022 uses the SPL discriminator, not Anchor's.
     pub fn fallback<'info>(
@@ -256,6 +369,15 @@ fn get_extra_account_metas() -> Vec<ExtraAccountMeta> {
         ExtraAccountMeta::new_with_seeds(
             &[Seed::Literal {
                 bytes: CONFIG_SEED.to_vec(),
+            }],
+            false,
+            false, // read-only
+        )
+        .unwrap(),
+        // [8] Exempt list PDA: ["exempt-list"]
+        ExtraAccountMeta::new_with_seeds(
+            &[Seed::Literal {
+                bytes: EXEMPT_LIST_SEED.to_vec(),
             }],
             false,
             false, // read-only
@@ -371,6 +493,13 @@ pub struct ExecuteHook<'info> {
         bump,
     )]
     pub config: Account<'info, HookConfig>,
+
+    /// Exempt address list (read-only)
+    #[account(
+        seeds = [EXEMPT_LIST_SEED],
+        bump,
+    )]
+    pub exempt_list: Account<'info, ExemptList>,
 }
 
 #[derive(Accounts)]
@@ -386,6 +515,57 @@ pub struct AdminAction<'info> {
         bump,
     )]
     pub config: Account<'info, HookConfig>,
+}
+
+#[derive(Accounts)]
+pub struct InitExemptList<'info> {
+    #[account(mut, constraint = admin.key() == config.admin @ HogeError::Unauthorized)]
+    pub admin: Signer<'info>,
+
+    #[account(seeds = [CONFIG_SEED], bump)]
+    pub config: Account<'info, HookConfig>,
+
+    #[account(
+        init, payer = admin, space = 8 + ExemptList::INIT_SPACE,
+        seeds = [EXEMPT_LIST_SEED], bump,
+    )]
+    pub exempt_list: Account<'info, ExemptList>,
+
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct ModifyExemptList<'info> {
+    #[account(constraint = admin.key() == exempt_list.admin @ HogeError::Unauthorized)]
+    pub admin: Signer<'info>,
+
+    #[account(
+        mut,
+        seeds = [EXEMPT_LIST_SEED], bump,
+    )]
+    pub exempt_list: Account<'info, ExemptList>,
+}
+
+#[derive(Accounts)]
+pub struct ReinitializeExtraAccountMetaList<'info> {
+    #[account(mut, constraint = payer.key() == config.admin @ HogeError::Unauthorized)]
+    pub payer: Signer<'info>,
+
+    /// CHECK: Just need pubkey
+    pub mint: UncheckedAccount<'info>,
+
+    /// CHECK: Will be closed and recreated
+    #[account(
+        mut,
+        seeds = [EXTRA_METAS_SEED, mint.key().as_ref()],
+        bump,
+    )]
+    pub extra_account_meta_list: UncheckedAccount<'info>,
+
+    #[account(seeds = [CONFIG_SEED], bump)]
+    pub config: Account<'info, HookConfig>,
+
+    pub system_program: Program<'info, System>,
 }
 
 // ── State ──────────────────────────────────────────────────────────────
@@ -411,6 +591,15 @@ pub struct HookConfig {
     pub paused: bool,
 }
 
+#[account]
+#[derive(InitSpace)]
+pub struct ExemptList {
+    pub admin: Pubkey,
+    pub count: u8,
+    #[max_len(16)]
+    pub addresses: Vec<Pubkey>,
+}
+
 // ── Events ─────────────────────────────────────────────────────────────
 
 #[event]
@@ -431,4 +620,10 @@ pub enum HogeError {
     Overflow,
     #[msg("Unauthorized")]
     Unauthorized,
+    #[msg("Exempt list is full (max 16 addresses)")]
+    ExemptListFull,
+    #[msg("Address is already exempt")]
+    AlreadyExempt,
+    #[msg("Address is not in exempt list")]
+    NotExempt,
 }

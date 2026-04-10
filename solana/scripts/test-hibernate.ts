@@ -99,10 +99,10 @@ async function main() {
     console.log("\n   Position already exists. Skipping stake test.");
     console.log("   To re-test, unstake first (after lock expires).\n");
 
-    // Try claiming
+    // Try claiming (need hook extra accounts for the reward vault -> user transfer)
     console.log("3. Attempting claim...");
     try {
-      const claimSig = await program.methods
+      const claimIx = await program.methods
         .claim()
         .accounts({
           user: admin.publicKey,
@@ -113,7 +113,15 @@ async function main() {
           userHoge: adminATA,
           token2022Program: TOKEN_2022_PROGRAM_ID,
         })
-        .rpc();
+        .instruction();
+
+      await addExtraAccountMetasForExecute(
+        connection, claimIx, hookProgram,
+        rewardVaultPDA, mint, adminATA, rewardVaultPDA, 1, "confirmed"
+      );
+
+      const claimTx = new anchor.web3.Transaction().add(claimIx);
+      const claimSig = await anchor.web3.sendAndConfirmTransaction(connection, claimTx, [admin]);
       console.log(`   Claimed! TX: ${claimSig}\n`);
     } catch (err: any) {
       console.log(`   Claim failed (expected if no rewards): ${err.message}\n`);

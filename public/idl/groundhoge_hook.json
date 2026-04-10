@@ -1,0 +1,901 @@
+{
+  "address": "BfeZebQtPz4aXyScC4aLyoSCTW6RfSC5iFMpvZ4zkHDU",
+  "metadata": {
+    "name": "groundhoge_hook",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Groundhoge Day Transfer Hook — daily sell limits + 109th tx trap"
+  },
+  "instructions": [
+    {
+      "name": "add_exempt",
+      "docs": [
+        "Admin: add an address to the exempt list (e.g. DEX pool vault)"
+      ],
+      "discriminator": [
+        170,
+        72,
+        81,
+        28,
+        225,
+        107,
+        65,
+        163
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "exempt_list",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  120,
+                  101,
+                  109,
+                  112,
+                  116,
+                  45,
+                  108,
+                  105,
+                  115,
+                  116
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "address",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "execute_hook",
+      "docs": [
+        "Transfer hook — called by Token-2022 on every transfer.",
+        "",
+        "Standard accounts (indices 0-4, passed by Token-2022):",
+        "0: source token account",
+        "1: mint",
+        "2: destination token account",
+        "3: source owner/delegate",
+        "4: extra_account_meta_list PDA",
+        "",
+        "Extra accounts (indices 5+, defined by us):",
+        "5: daily_counter (per-wallet, writable — may be uninitialized)",
+        "6: global_counter (writable)",
+        "7: config (read-only)"
+      ],
+      "discriminator": [
+        218,
+        34,
+        167,
+        226,
+        109,
+        32,
+        234,
+        169
+      ],
+      "accounts": [
+        {
+          "name": "source_token"
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "destination_token"
+        },
+        {
+          "name": "source_authority"
+        },
+        {
+          "name": "extra_account_meta_list",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  120,
+                  116,
+                  114,
+                  97,
+                  45,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  45,
+                  109,
+                  101,
+                  116,
+                  97,
+                  115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "daily_counter",
+          "docs": [
+            "unregistered wallets — daily limit is skipped in that case.",
+            "Seeds validated via constraint below."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  97,
+                  105,
+                  108,
+                  121,
+                  45,
+                  108,
+                  105,
+                  109,
+                  105,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "source_authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "global_counter",
+          "docs": [
+            "Global tx counter"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  120,
+                  45,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  101,
+                  114
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "config",
+          "docs": [
+            "Config (read-only)"
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  104,
+                  111,
+                  111,
+                  107,
+                  45,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "exempt_list",
+          "docs": [
+            "Exempt address list (read-only)"
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  120,
+                  101,
+                  109,
+                  112,
+                  116,
+                  45,
+                  108,
+                  105,
+                  115,
+                  116
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "init_exempt_list",
+      "docs": [
+        "Admin: initialize the exempt address list"
+      ],
+      "discriminator": [
+        14,
+        169,
+        181,
+        93,
+        225,
+        61,
+        166,
+        78
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  104,
+                  111,
+                  111,
+                  107,
+                  45,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "exempt_list",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  120,
+                  101,
+                  109,
+                  112,
+                  116,
+                  45,
+                  108,
+                  105,
+                  115,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initialize_extra_account_meta_list",
+      "docs": [
+        "One-time setup: create the ExtraAccountMetaList PDA and initialize",
+        "global state (tx counter + config)."
+      ],
+      "discriminator": [
+        92,
+        197,
+        174,
+        197,
+        41,
+        124,
+        19,
+        3
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "extra_account_meta_list",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  120,
+                  116,
+                  114,
+                  97,
+                  45,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  45,
+                  109,
+                  101,
+                  116,
+                  97,
+                  115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "global_counter",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  120,
+                  45,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  101,
+                  114
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  104,
+                  111,
+                  111,
+                  107,
+                  45,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "register_wallet",
+      "docs": [
+        "Register a wallet so it can trade. Creates the per-wallet daily counter PDA.",
+        "Anyone can call this (for their own wallet or on behalf of another)."
+      ],
+      "discriminator": [
+        181,
+        141,
+        102,
+        82,
+        135,
+        213,
+        141,
+        8
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "wallet",
+          "docs": [
+            "The wallet to register"
+          ]
+        },
+        {
+          "name": "daily_counter",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  97,
+                  105,
+                  108,
+                  121,
+                  45,
+                  108,
+                  105,
+                  109,
+                  105,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "wallet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "reinitialize_extra_account_meta_list",
+      "docs": [
+        "Admin: reinitialize the ExtraAccountMetaList with exempt list support.",
+        "Reallocs the existing PDA and rewrites with 4 extra accounts."
+      ],
+      "discriminator": [
+        137,
+        38,
+        8,
+        53,
+        118,
+        214,
+        198,
+        66
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "extra_account_meta_list",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  120,
+                  116,
+                  114,
+                  97,
+                  45,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  45,
+                  109,
+                  101,
+                  116,
+                  97,
+                  115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  104,
+                  111,
+                  111,
+                  107,
+                  45,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "remove_exempt",
+      "docs": [
+        "Admin: remove an address from the exempt list"
+      ],
+      "discriminator": [
+        245,
+        40,
+        254,
+        205,
+        149,
+        112,
+        101,
+        188
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "exempt_list",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  120,
+                  101,
+                  109,
+                  112,
+                  116,
+                  45,
+                  108,
+                  105,
+                  115,
+                  116
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "address",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "set_paused",
+      "docs": [
+        "Admin: pause/unpause the hook"
+      ],
+      "discriminator": [
+        91,
+        60,
+        125,
+        192,
+        176,
+        225,
+        166,
+        218
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  104,
+                  111,
+                  111,
+                  107,
+                  45,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "paused",
+          "type": "bool"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "DailyCounter",
+      "discriminator": [
+        93,
+        18,
+        156,
+        84,
+        91,
+        233,
+        198,
+        144
+      ]
+    },
+    {
+      "name": "ExemptList",
+      "discriminator": [
+        93,
+        48,
+        135,
+        144,
+        247,
+        131,
+        241,
+        0
+      ]
+    },
+    {
+      "name": "GlobalCounter",
+      "discriminator": [
+        42,
+        206,
+        176,
+        58,
+        175,
+        129,
+        130,
+        233
+      ]
+    },
+    {
+      "name": "HookConfig",
+      "discriminator": [
+        137,
+        155,
+        101,
+        95,
+        138,
+        72,
+        8,
+        182
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "TrapTriggered",
+      "discriminator": [
+        254,
+        10,
+        186,
+        118,
+        67,
+        114,
+        31,
+        191
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "DailySellLimitExceeded",
+      "msg": "Daily sell limit of 1,883 $HOGE exceeded. The Oracle restricts your trades."
+    },
+    {
+      "code": 6001,
+      "name": "Overflow",
+      "msg": "Arithmetic overflow"
+    },
+    {
+      "code": 6002,
+      "name": "Unauthorized",
+      "msg": "Unauthorized"
+    },
+    {
+      "code": 6003,
+      "name": "ExemptListFull",
+      "msg": "Exempt list is full (max 16 addresses)"
+    },
+    {
+      "code": 6004,
+      "name": "AlreadyExempt",
+      "msg": "Address is already exempt"
+    },
+    {
+      "code": 6005,
+      "name": "NotExempt",
+      "msg": "Address is not in exempt list"
+    }
+  ],
+  "types": [
+    {
+      "name": "DailyCounter",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "day_epoch",
+            "type": "u64"
+          },
+          {
+            "name": "amount_transferred",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ExemptList",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "count",
+            "type": "u8"
+          },
+          {
+            "name": "addresses",
+            "type": {
+              "vec": "pubkey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "GlobalCounter",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "count",
+            "type": "u64"
+          },
+          {
+            "name": "last_trapped_count",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "HookConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "paused",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TrapTriggered",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tx_number",
+            "type": "u64"
+          },
+          {
+            "name": "source",
+            "type": "pubkey"
+          },
+          {
+            "name": "destination",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    }
+  ]
+}
