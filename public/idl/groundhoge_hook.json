@@ -800,6 +800,11 @@
       "code": 6005,
       "name": "NotExempt",
       "msg": "Address is not in exempt list"
+    },
+    {
+      "code": 6006,
+      "name": "WalletNotRegistered",
+      "msg": "Wallet not registered. Register with The Oracle to trade."
     }
   ],
   "types": [

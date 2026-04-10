@@ -103,6 +103,63 @@
       "args": []
     },
     {
+      "name": "set_paused",
+      "docs": [
+        "Admin: pause or unpause the pool."
+      ],
+      "discriminator": [
+        91,
+        60,
+        125,
+        192,
+        176,
+        225,
+        166,
+        218
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  117,
+                  114,
+                  114,
+                  111,
+                  119,
+                  45,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool.hoge_mint",
+                "account": "Pool"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "paused",
+          "type": "bool"
+        }
+      ]
+    },
+    {
       "name": "swap_hoge_for_sol",
       "docs": [
         "Swap $HOGE for SOL (sell)."
@@ -459,6 +516,21 @@
       "code": 6004,
       "name": "Unauthorized",
       "msg": "Unauthorized"
+    },
+    {
+      "code": 6005,
+      "name": "InvalidVault",
+      "msg": "Invalid vault account"
+    },
+    {
+      "code": 6006,
+      "name": "PoolNotInitialized",
+      "msg": "Pool not initialized — both reserves must be non-zero"
+    },
+    {
+      "code": 6007,
+      "name": "PoolPaused",
+      "msg": "Pool is paused"
     }
   ],
   "types": [
@@ -510,6 +582,10 @@
           {
             "name": "authority_bump",
             "type": "u8"
+          },
+          {
+            "name": "paused",
+            "type": "bool"
           }
         ]
       }

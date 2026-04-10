@@ -46,16 +46,17 @@ impl HibernateTier {
 
 // ── Helpers ───────────────────────────────────────────────────────────
 
-fn update_accumulated(config: &mut HibernateConfig, now: i64) {
+fn update_accumulated(config: &mut HibernateConfig, now: i64) -> Result<()> {
     if config.total_weighted > 0 {
-        let elapsed = (now - config.last_update_ts) as u128;
+        let elapsed = now.saturating_sub(config.last_update_ts).max(0) as u128;
         let new_rewards = elapsed * (config.reward_rate as u128) * PRECISION;
         config.accumulated_per_weight = config
             .accumulated_per_weight
             .checked_add(new_rewards / (config.total_weighted as u128))
-            .unwrap_or(config.accumulated_per_weight);
+            .ok_or(HibernateError::MathOverflow)?;
     }
     config.last_update_ts = now;
+    Ok(())
 }
 
 fn calculate_pending(position: &StakePosition, config: &HibernateConfig) -> Result<u64> {
@@ -64,7 +65,8 @@ fn calculate_pending(position: &StakePosition, config: &HibernateConfig) -> Resu
         .ok_or(HibernateError::MathOverflow)?
         / PRECISION;
     let pending = gross.saturating_sub(position.reward_debt);
-    Ok(pending as u64)
+    let pending_u64: u64 = pending.try_into().map_err(|_| HibernateError::MathOverflow)?;
+    Ok(pending_u64)
 }
 
 /// Raw invoke for Token-2022 TransferChecked with TransferHook support.
@@ -159,10 +161,11 @@ pub mod groundhoge_hibernate {
         amount: u64,
     ) -> Result<()> {
         require!(amount > 0, HibernateError::InvalidAmount);
+        require!(!ctx.accounts.config.paused, HibernateError::Paused);
 
         let now = Clock::get()?.unix_timestamp;
         let config = &mut ctx.accounts.config;
-        update_accumulated(config, now);
+        update_accumulated(config, now)?;
 
         let multiplier = tier.multiplier();
         let weighted = amount
@@ -223,13 +226,17 @@ pub mod groundhoge_hibernate {
     pub fn claim<'info>(
         ctx: Context<'_, '_, 'info, 'info, Claim<'info>>,
     ) -> Result<()> {
+        require!(!ctx.accounts.config.paused, HibernateError::Paused);
         let now = Clock::get()?.unix_timestamp;
         let config = &mut ctx.accounts.config;
-        update_accumulated(config, now);
+        update_accumulated(config, now)?;
 
         let position = &ctx.accounts.position;
         let pending = calculate_pending(position, config)?;
-        require!(pending > 0, HibernateError::NoRewards);
+
+        let vault_balance = ctx.accounts.reward_vault.amount;
+        let payout = pending.min(vault_balance);
+        require!(payout > 0, HibernateError::NoRewards);
 
         // Transfer rewards from reward vault to user (with TransferHook)
         let mint_key = config.mint;
@@ -246,7 +253,7 @@ pub mod groundhoge_hibernate {
             &ctx.accounts.user_hoge.to_account_info(),
             &ctx.accounts.reward_vault.to_account_info(),
             &remaining,
-            pending,
+            payout,
             decimals,
             signer_seeds,
         )?;
@@ -258,7 +265,7 @@ pub mod groundhoge_hibernate {
             .ok_or(HibernateError::MathOverflow)?
             / PRECISION;
 
-        msg!("Claimed {} Elixir rewards", pending);
+        msg!("Claimed {} Elixir rewards", payout);
         Ok(())
     }
 
@@ -266,6 +273,7 @@ pub mod groundhoge_hibernate {
     pub fn unstake<'info>(
         ctx: Context<'_, '_, 'info, 'info, Unstake<'info>>,
     ) -> Result<()> {
+        require!(!ctx.accounts.config.paused, HibernateError::Paused);
         let now = Clock::get()?.unix_timestamp;
 
         require!(
@@ -274,7 +282,7 @@ pub mod groundhoge_hibernate {
         );
 
         let config = &mut ctx.accounts.config;
-        update_accumulated(config, now);
+        update_accumulated(config, now)?;
 
         let position = &ctx.accounts.position;
         let pending = calculate_pending(position, config)?;
@@ -284,8 +292,10 @@ pub mod groundhoge_hibernate {
         let remaining = ctx.remaining_accounts.to_vec();
         let decimals = ctx.accounts.mint.decimals;
 
-        // Claim any remaining rewards
-        if pending > 0 {
+        // Claim any remaining rewards (clamped to vault balance)
+        let reward_vault_balance = ctx.accounts.reward_vault.amount;
+        let reward_payout = pending.min(reward_vault_balance);
+        if reward_payout > 0 {
             let mint_key = config.mint;
             let reward_bump = config.reward_vault_bump;
             let bump_bytes = [reward_bump];
@@ -298,7 +308,7 @@ pub mod groundhoge_hibernate {
                 &ctx.accounts.user_hoge.to_account_info(),
                 &ctx.accounts.reward_vault.to_account_info(),
                 &remaining,
-                pending,
+                reward_payout,
                 decimals,
                 signer_seeds,
             )?;
@@ -326,7 +336,7 @@ pub mod groundhoge_hibernate {
         config.total_staked = config.total_staked.saturating_sub(stake_amount);
         config.total_weighted = config.total_weighted.saturating_sub(weighted);
 
-        msg!("Exited hibernation: {} $HOGE returned + {} rewards", stake_amount, pending);
+        msg!("Exited hibernation: {} $HOGE returned + {} rewards", stake_amount, reward_payout);
         Ok(())
     }
 
@@ -339,7 +349,7 @@ pub mod groundhoge_hibernate {
 
         let now = Clock::get()?.unix_timestamp;
         let config = &mut ctx.accounts.config;
-        update_accumulated(config, now);
+        update_accumulated(config, now)?;
 
         // Transfer fees from admin to reward vault (with hook)
         let remaining = ctx.remaining_accounts.to_vec();
@@ -365,9 +375,35 @@ pub mod groundhoge_hibernate {
     pub fn update_reward_rate(ctx: Context<UpdateRewardRate>, new_rate: u64) -> Result<()> {
         let now = Clock::get()?.unix_timestamp;
         let config = &mut ctx.accounts.config;
-        update_accumulated(config, now);
+        update_accumulated(config, now)?;
         config.reward_rate = new_rate;
         msg!("Reward rate updated to {} per second", new_rate);
+        Ok(())
+    }
+
+    /// Admin: pause or unpause the Hibernation Portal
+    pub fn set_paused(ctx: Context<UpdateRewardRate>, paused: bool) -> Result<()> {
+        let now = Clock::get()?.unix_timestamp;
+        let config = &mut ctx.accounts.config;
+        update_accumulated(config, now)?;
+        config.paused = paused;
+        msg!("Hibernate paused: {}", paused);
+        Ok(())
+    }
+
+    /// Admin: propose a new admin
+    pub fn propose_admin(ctx: Context<UpdateRewardRate>, new_admin: Pubkey) -> Result<()> {
+        ctx.accounts.config.pending_admin = new_admin;
+        msg!("Admin transfer proposed to {}", new_admin);
+        Ok(())
+    }
+
+    /// New admin: accept the admin transfer
+    pub fn accept_admin(ctx: Context<AcceptAdmin>) -> Result<()> {
+        let config = &mut ctx.accounts.config;
+        config.admin = config.pending_admin;
+        config.pending_admin = Pubkey::default();
+        msg!("Admin transferred to {}", config.admin);
         Ok(())
     }
 }
@@ -468,7 +504,7 @@ pub struct Claim<'info> {
     )]
     pub reward_vault: InterfaceAccount<'info, TokenAccount>,
 
-    #[account(mut, token::mint = mint)]
+    #[account(mut, token::mint = mint, token::authority = user)]
     pub user_hoge: InterfaceAccount<'info, TokenAccount>,
 
     pub token_2022_program: Program<'info, Token2022>,
@@ -508,7 +544,7 @@ pub struct Unstake<'info> {
     )]
     pub reward_vault: InterfaceAccount<'info, TokenAccount>,
 
-    #[account(mut, token::mint = mint)]
+    #[account(mut, token::mint = mint, token::authority = user)]
     pub user_hoge: InterfaceAccount<'info, TokenAccount>,
 
     pub token_2022_program: Program<'info, Token2022>,
@@ -555,6 +591,17 @@ pub struct UpdateRewardRate<'info> {
     pub config: Account<'info, HibernateConfig>,
 }
 
+#[derive(Accounts)]
+pub struct AcceptAdmin<'info> {
+    #[account(
+        constraint = new_admin.key() == config.pending_admin @ HibernateError::Unauthorized,
+    )]
+    pub new_admin: Signer<'info>,
+
+    #[account(mut, seeds = [CONFIG_SEED], bump = config.bump)]
+    pub config: Account<'info, HibernateConfig>,
+}
+
 // ── State ─────────────────────────────────────────────────────────────
 
 #[account]
@@ -572,6 +619,8 @@ pub struct HibernateConfig {
     pub bump: u8,
     pub vault_bump: u8,
     pub reward_vault_bump: u8,
+    pub paused: bool,
+    pub pending_admin: Pubkey,
 }
 
 #[account]
@@ -606,4 +655,6 @@ pub enum HibernateError {
     PositionExists,
     #[msg("Insufficient reward vault balance")]
     InsufficientRewards,
+    #[msg("Hibernation Portal is paused")]
+    Paused,
 }

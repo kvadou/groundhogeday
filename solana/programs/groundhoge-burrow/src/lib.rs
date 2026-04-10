@@ -34,6 +34,7 @@ pub mod groundhoge_burrow {
         pool.total_swaps = 0;
         pool.bump = ctx.bumps.pool;
         pool.authority_bump = ctx.bumps.pool_authority;
+        pool.paused = false;
 
         msg!("The Burrow created. Awaiting liquidity.");
         Ok(())
@@ -58,14 +59,33 @@ pub mod groundhoge_burrow {
         require!(sol_in > 0, BurrowError::InvalidAmount);
 
         let pool = &mut ctx.accounts.pool;
+        require!(!pool.paused, BurrowError::PoolPaused);
+        require!(pool.sol_reserve > 0 && pool.hoge_reserve > 0, BurrowError::PoolNotInitialized);
+
         let hoge_out = calculate_output(sol_in, pool.sol_reserve, pool.hoge_reserve)?;
         require!(hoge_out >= min_hoge_out, BurrowError::SlippageExceeded);
         require!(hoge_out < pool.hoge_reserve, BurrowError::InsufficientLiquidity);
 
+        // Extract values needed for CPI before mutable borrow ends
         let authority_bump = pool.authority_bump;
-        let remaining = ctx.remaining_accounts.to_vec();
         let decimals = ctx.accounts.hoge_mint.decimals;
         let hoge_mint_key = ctx.accounts.hoge_mint.key();
+        let remaining = ctx.remaining_accounts.to_vec();
+
+        // Update state FIRST (optimistic — reverts if CPI fails)
+        pool.sol_reserve = pool.sol_reserve.checked_add(sol_in).ok_or(BurrowError::MathOverflow)?;
+        pool.hoge_reserve = pool.hoge_reserve.checked_sub(hoge_out).ok_or(BurrowError::MathOverflow)?;
+        pool.total_volume = pool.total_volume.checked_add(sol_in).ok_or(BurrowError::MathOverflow)?;
+        pool.total_swaps = pool.total_swaps.checked_add(1).ok_or(BurrowError::MathOverflow)?;
+
+        emit!(SwapEvent {
+            user: ctx.accounts.user.key(),
+            direction: SwapDirection::Buy,
+            amount_in: sol_in,
+            amount_out: hoge_out,
+            hoge_reserve: pool.hoge_reserve,
+            sol_reserve: pool.sol_reserve,
+        });
 
         // User sends WSOL to vault
         token_interface::transfer_checked(
@@ -98,20 +118,6 @@ pub mod groundhoge_burrow {
             signer_seeds,
         )?;
 
-        let pool = &mut ctx.accounts.pool;
-        pool.sol_reserve = pool.sol_reserve.checked_add(sol_in).ok_or(BurrowError::MathOverflow)?;
-        pool.hoge_reserve = pool.hoge_reserve.checked_sub(hoge_out).ok_or(BurrowError::MathOverflow)?;
-        pool.total_volume = pool.total_volume.checked_add(sol_in).ok_or(BurrowError::MathOverflow)?;
-        pool.total_swaps = pool.total_swaps.checked_add(1).ok_or(BurrowError::MathOverflow)?;
-
-        emit!(SwapEvent {
-            user: ctx.accounts.user.key(),
-            direction: SwapDirection::Buy,
-            amount_in: sol_in,
-            amount_out: hoge_out,
-            hoge_reserve: pool.hoge_reserve,
-            sol_reserve: pool.sol_reserve,
-        });
         Ok(())
     }
 
@@ -124,14 +130,33 @@ pub mod groundhoge_burrow {
         require!(hoge_in > 0, BurrowError::InvalidAmount);
 
         let pool = &mut ctx.accounts.pool;
+        require!(!pool.paused, BurrowError::PoolPaused);
+        require!(pool.sol_reserve > 0 && pool.hoge_reserve > 0, BurrowError::PoolNotInitialized);
+
         let sol_out = calculate_output(hoge_in, pool.hoge_reserve, pool.sol_reserve)?;
         require!(sol_out >= min_sol_out, BurrowError::SlippageExceeded);
         require!(sol_out < pool.sol_reserve, BurrowError::InsufficientLiquidity);
 
+        // Extract values needed for CPI before mutable borrow ends
         let authority_bump = pool.authority_bump;
-        let remaining = ctx.remaining_accounts.to_vec();
         let decimals = ctx.accounts.hoge_mint.decimals;
         let hoge_mint_key = ctx.accounts.hoge_mint.key();
+        let remaining = ctx.remaining_accounts.to_vec();
+
+        // Update state FIRST (optimistic — reverts if CPI fails)
+        pool.hoge_reserve = pool.hoge_reserve.checked_add(hoge_in).ok_or(BurrowError::MathOverflow)?;
+        pool.sol_reserve = pool.sol_reserve.checked_sub(sol_out).ok_or(BurrowError::MathOverflow)?;
+        pool.total_volume = pool.total_volume.checked_add(sol_out).ok_or(BurrowError::MathOverflow)?;
+        pool.total_swaps = pool.total_swaps.checked_add(1).ok_or(BurrowError::MathOverflow)?;
+
+        emit!(SwapEvent {
+            user: ctx.accounts.user.key(),
+            direction: SwapDirection::Sell,
+            amount_in: hoge_in,
+            amount_out: sol_out,
+            hoge_reserve: pool.hoge_reserve,
+            sol_reserve: pool.sol_reserve,
+        });
 
         // User sends $HOGE to vault (raw invoke for TransferHook support in CPI)
         invoke_transfer_checked_with_hook(
@@ -165,20 +190,13 @@ pub mod groundhoge_burrow {
             9,
         )?;
 
-        let pool = &mut ctx.accounts.pool;
-        pool.hoge_reserve = pool.hoge_reserve.checked_add(hoge_in).ok_or(BurrowError::MathOverflow)?;
-        pool.sol_reserve = pool.sol_reserve.checked_sub(sol_out).ok_or(BurrowError::MathOverflow)?;
-        pool.total_volume = pool.total_volume.checked_add(sol_out).ok_or(BurrowError::MathOverflow)?;
-        pool.total_swaps = pool.total_swaps.checked_add(1).ok_or(BurrowError::MathOverflow)?;
+        Ok(())
+    }
 
-        emit!(SwapEvent {
-            user: ctx.accounts.user.key(),
-            direction: SwapDirection::Sell,
-            amount_in: hoge_in,
-            amount_out: sol_out,
-            hoge_reserve: pool.hoge_reserve,
-            sol_reserve: pool.sol_reserve,
-        });
+    /// Admin: pause or unpause the pool.
+    pub fn set_paused(ctx: Context<AdminAction>, paused: bool) -> Result<()> {
+        ctx.accounts.pool.paused = paused;
+        msg!("Pool paused: {}", paused);
         Ok(())
     }
 }
@@ -329,9 +347,11 @@ pub struct SwapSolForHoge<'info> {
     pub hoge_mint: Box<InterfaceAccount<'info, Mint>>,
     pub wsol_mint: Box<InterfaceAccount<'info, Mint>>,
 
-    #[account(mut, token::mint = hoge_mint, token::authority = pool_authority)]
+    #[account(mut, token::mint = hoge_mint, token::authority = pool_authority,
+              constraint = vault_hoge.key() == pool.vault_hoge @ BurrowError::InvalidVault)]
     pub vault_hoge: Box<InterfaceAccount<'info, TokenAccount>>,
-    #[account(mut, token::mint = wsol_mint, token::authority = pool_authority)]
+    #[account(mut, token::mint = wsol_mint, token::authority = pool_authority,
+              constraint = vault_wsol.key() == pool.vault_wsol @ BurrowError::InvalidVault)]
     pub vault_wsol: Box<InterfaceAccount<'info, TokenAccount>>,
 
     #[account(mut, token::mint = wsol_mint, token::authority = user)]
@@ -358,9 +378,11 @@ pub struct SwapHogeForSol<'info> {
     pub hoge_mint: Box<InterfaceAccount<'info, Mint>>,
     pub wsol_mint: Box<InterfaceAccount<'info, Mint>>,
 
-    #[account(mut, token::mint = hoge_mint, token::authority = pool_authority)]
+    #[account(mut, token::mint = hoge_mint, token::authority = pool_authority,
+              constraint = vault_hoge.key() == pool.vault_hoge @ BurrowError::InvalidVault)]
     pub vault_hoge: Box<InterfaceAccount<'info, TokenAccount>>,
-    #[account(mut, token::mint = wsol_mint, token::authority = pool_authority)]
+    #[account(mut, token::mint = wsol_mint, token::authority = pool_authority,
+              constraint = vault_wsol.key() == pool.vault_wsol @ BurrowError::InvalidVault)]
     pub vault_wsol: Box<InterfaceAccount<'info, TokenAccount>>,
 
     #[account(mut, token::mint = hoge_mint, token::authority = user)]
@@ -370,6 +392,15 @@ pub struct SwapHogeForSol<'info> {
 
     pub token_program: Program<'info, Token>,
     pub token_2022_program: Program<'info, Token2022>,
+}
+
+#[derive(Accounts)]
+pub struct AdminAction<'info> {
+    #[account(constraint = admin.key() == pool.admin @ BurrowError::Unauthorized)]
+    pub admin: Signer<'info>,
+
+    #[account(mut, seeds = [POOL_SEED, pool.hoge_mint.as_ref()], bump = pool.bump)]
+    pub pool: Account<'info, Pool>,
 }
 
 // ── State ──────────────────────────────────────────────────────────────
@@ -388,6 +419,7 @@ pub struct Pool {
     pub total_swaps: u64,
     pub bump: u8,
     pub authority_bump: u8,
+    pub paused: bool,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -415,4 +447,10 @@ pub enum BurrowError {
     MathOverflow,
     #[msg("Unauthorized")]
     Unauthorized,
+    #[msg("Invalid vault account")]
+    InvalidVault,
+    #[msg("Pool not initialized — both reserves must be non-zero")]
+    PoolNotInitialized,
+    #[msg("Pool is paused")]
+    PoolPaused,
 }

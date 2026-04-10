@@ -196,10 +196,10 @@ pub mod groundhoge_hook {
                 DAILY_SELL_LIMIT_RAW
             );
         } else {
-            msg!(
-                "Wallet unregistered — daily limit bypassed. Transfer: {} raw units",
-                amount
-            );
+            // Unregistered wallets cannot transfer — must register first
+            // (Exempt addresses still bypass via the exempt check above)
+            msg!("Wallet not registered. Register with The Oracle first.");
+            return err!(HogeError::WalletNotRegistered);
         }
 
         // ── 109th Transaction Trap ─────────────────────────────────────
@@ -257,7 +257,7 @@ pub mod groundhoge_hook {
         let pos = list.addresses.iter().position(|a| a == &address);
         require!(pos.is_some(), HogeError::NotExempt);
         list.addresses.swap_remove(pos.unwrap());
-        list.count -= 1;
+        list.count = list.count.checked_sub(1).ok_or(HogeError::Overflow)?;
         msg!("Removed exempt address: {}", address);
         Ok(())
     }
@@ -435,7 +435,7 @@ pub struct RegisterWallet<'info> {
     pub wallet: UncheckedAccount<'info>,
 
     #[account(
-        init_if_needed,
+        init,
         payer = payer,
         space = 8 + DailyCounter::INIT_SPACE,
         seeds = [DAILY_COUNTER_SEED, wallet.key().as_ref()],
@@ -626,4 +626,6 @@ pub enum HogeError {
     AlreadyExempt,
     #[msg("Address is not in exempt list")]
     NotExempt,
+    #[msg("Wallet not registered. Register with The Oracle to trade.")]
+    WalletNotRegistered,
 }
