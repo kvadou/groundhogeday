@@ -5,10 +5,12 @@ skip-lint = false
 [programs.localnet]
 groundhoge_hook = "BfeZebQtPz4aXyScC4aLyoSCTW6RfSC5iFMpvZ4zkHDU"
 groundhoge_burrow = "4TJmU197oWhxmjSq5LR8fSvcgy3i6drXhP5zhNzKi9zi"
+groundhoge_hibernate = "8udHGYeRaqNHAMeK3Br66q4mciViz8dL3D4rtPpUXD6q"
 
 [programs.devnet]
 groundhoge_hook = "BfeZebQtPz4aXyScC4aLyoSCTW6RfSC5iFMpvZ4zkHDU"
 groundhoge_burrow = "4TJmU197oWhxmjSq5LR8fSvcgy3i6drXhP5zhNzKi9zi"
+groundhoge_hibernate = "8udHGYeRaqNHAMeK3Br66q4mciViz8dL3D4rtPpUXD6q"
 
 [registry]
 url = "https://api.apr.dev"
