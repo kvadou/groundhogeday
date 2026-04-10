@@ -14,6 +14,9 @@ export const BURROW_PROGRAM_ID = new PublicKey("4TJmU197oWhxmjSq5LR8fSvcgy3i6drX
 export const GLOBAL_COUNTER_PDA = new PublicKey("EM54My6d8cdtjDfmeqjCsNq4hv1YdgeJCX8XAYy6ibcY");
 export const HOOK_CONFIG_PDA = new PublicKey("DXJWaQwbQbTLzxS4i4DBVr3W4xJt8L5bYjSARhh891vN");
 
+// Hibernate program
+export const HIBERNATE_PROGRAM_ID = new PublicKey("8udHGYeRaqNHAMeK3Br66q4mciViz8dL3D4rtPpUXD6q");
+
 // Pool (The Burrow)
 export const POOL_PDA = new PublicKey("4oC28QeV6G2qh6hFTEwLrwpuY1XkK74VGGQbnp5QMJpq");
 export const VAULT_HOGE = new PublicKey("CrPko9yCEcTnw3gp5KF8zrzpTQpWmS6BbczaTkxK83Sk");
