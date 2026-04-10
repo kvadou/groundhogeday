@@ -165,6 +165,7 @@ export default function OracleTerminal() {
 
   return (
     <section
+      id="oracle-terminal"
       ref={ref}
       style={{ backgroundColor: "#060610", borderTop: "1px solid #1a1a2e" }}
       className={`w-full py-24 fade-in-section ${isInView ? "is-visible" : ""}`}
