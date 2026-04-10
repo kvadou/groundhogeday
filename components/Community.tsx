@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useInView } from "@/hooks/useInView";
 
 export default function Community() {
@@ -112,15 +113,18 @@ export default function Community() {
               </a>
             </li>
             <li>
-              <span className="text-sm text-[#e8e6e3] inline-flex items-center gap-2">
+              <Link
+                href="/hibernate"
+                className="text-sm text-[#e8e6e3] hover:text-[#00ff88] transition-colors inline-flex items-center gap-2"
+              >
                 Hibernation Portal
                 <span
                   className="text-[10px] border border-[#00ff88]/30 text-[#00ff88] px-2 py-0.5 rounded"
                   style={{ fontFamily: "var(--font-mono)" }}
                 >
-                  COMING Q3 2026
+                  ENTER THE BURROW
                 </span>
-              </span>
+              </Link>
             </li>
           </ul>
         </div>

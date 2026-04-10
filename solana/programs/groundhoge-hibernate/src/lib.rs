@@ -1,8 +1,6 @@
 use anchor_lang::prelude::*;
-use anchor_spl::{
-    token_2022::Token2022,
-    token_interface::{Mint, TokenAccount},
-};
+use anchor_spl::token_2022::Token2022;
+use anchor_spl::token_interface::{Mint, TokenAccount};
 use anchor_lang::solana_program::program::invoke_signed;
 
 declare_id!("8udHGYeRaqNHAMeK3Br66q4mciViz8dL3D4rtPpUXD6q");
@@ -222,7 +220,9 @@ pub mod groundhoge_hibernate {
     }
 
     /// Claim accrued Elixir rewards
-    pub fn claim(ctx: Context<Claim>) -> Result<()> {
+    pub fn claim<'info>(
+        ctx: Context<'_, '_, 'info, 'info, Claim<'info>>,
+    ) -> Result<()> {
         let now = Clock::get()?.unix_timestamp;
         let config = &mut ctx.accounts.config;
         update_accumulated(config, now);
@@ -231,25 +231,24 @@ pub mod groundhoge_hibernate {
         let pending = calculate_pending(position, config)?;
         require!(pending > 0, HibernateError::NoRewards);
 
-        // Transfer rewards from reward vault to user
+        // Transfer rewards from reward vault to user (with TransferHook)
         let mint_key = config.mint;
         let reward_bump = config.reward_vault_bump;
         let bump_bytes = [reward_bump];
         let signer_seeds: &[&[&[u8]]] = &[&[REWARD_VAULT_SEED, mint_key.as_ref(), &bump_bytes]];
+        let remaining = ctx.remaining_accounts.to_vec();
+        let decimals = ctx.accounts.mint.decimals;
 
-        anchor_spl::token_2022::transfer_checked(
-            CpiContext::new(
-                ctx.accounts.token_2022_program.to_account_info(),
-                anchor_spl::token_2022::TransferChecked {
-                    from: ctx.accounts.reward_vault.to_account_info(),
-                    mint: ctx.accounts.mint.to_account_info(),
-                    to: ctx.accounts.user_hoge.to_account_info(),
-                    authority: ctx.accounts.reward_vault.to_account_info(),
-                },
-            )
-            .with_signer(signer_seeds),
+        invoke_transfer_checked_with_hook(
+            &ctx.accounts.token_2022_program.to_account_info(),
+            &ctx.accounts.reward_vault.to_account_info(),
+            &ctx.accounts.mint.to_account_info(),
+            &ctx.accounts.user_hoge.to_account_info(),
+            &ctx.accounts.reward_vault.to_account_info(),
+            &remaining,
             pending,
-            ctx.accounts.mint.decimals,
+            decimals,
+            signer_seeds,
         )?;
 
         // Update reward debt
@@ -282,6 +281,9 @@ pub mod groundhoge_hibernate {
         let stake_amount = position.amount;
         let weighted = position.weighted_amount;
 
+        let remaining = ctx.remaining_accounts.to_vec();
+        let decimals = ctx.accounts.mint.decimals;
+
         // Claim any remaining rewards
         if pending > 0 {
             let mint_key = config.mint;
@@ -289,19 +291,16 @@ pub mod groundhoge_hibernate {
             let bump_bytes = [reward_bump];
             let signer_seeds: &[&[&[u8]]] = &[&[REWARD_VAULT_SEED, mint_key.as_ref(), &bump_bytes]];
 
-            anchor_spl::token_2022::transfer_checked(
-                CpiContext::new(
-                    ctx.accounts.token_2022_program.to_account_info(),
-                    anchor_spl::token_2022::TransferChecked {
-                        from: ctx.accounts.reward_vault.to_account_info(),
-                        mint: ctx.accounts.mint.to_account_info(),
-                        to: ctx.accounts.user_hoge.to_account_info(),
-                        authority: ctx.accounts.reward_vault.to_account_info(),
-                    },
-                )
-                .with_signer(signer_seeds),
+            invoke_transfer_checked_with_hook(
+                &ctx.accounts.token_2022_program.to_account_info(),
+                &ctx.accounts.reward_vault.to_account_info(),
+                &ctx.accounts.mint.to_account_info(),
+                &ctx.accounts.user_hoge.to_account_info(),
+                &ctx.accounts.reward_vault.to_account_info(),
+                &remaining,
                 pending,
-                ctx.accounts.mint.decimals,
+                decimals,
+                signer_seeds,
             )?;
         }
 
@@ -310,8 +309,6 @@ pub mod groundhoge_hibernate {
         let vault_bump = config.vault_bump;
         let bump_bytes = [vault_bump];
         let vault_seeds: &[&[&[u8]]] = &[&[VAULT_SEED, mint_key.as_ref(), &bump_bytes]];
-        let remaining = ctx.remaining_accounts.to_vec();
-        let decimals = ctx.accounts.mint.decimals;
 
         invoke_transfer_checked_with_hook(
             &ctx.accounts.token_2022_program.to_account_info(),
