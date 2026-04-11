@@ -5,7 +5,7 @@ import CountdownClock from "./CountdownClock";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-4" style={{ paddingTop: 76 }}>
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-4" style={{ paddingTop: 140, paddingBottom: 64 }}>
       {/* Radial gradient behind countdown */}
       <div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
