@@ -2,150 +2,412 @@
 
 import { useInView } from "@/hooks/useInView";
 
+const PROTOCOL_SPEC = [
+  { label: "TRIGGER", value: "February 2, 7:25 AM EST" },
+  { label: "FREQUENCY", value: "Annual (immutable)" },
+  { label: "ACCURACY", value: "100%", highlight: true },
+  { label: "MECHANISM", value: "Shadow Detection at Gobbler\u2019s Knob" },
+  { label: "ENFORCEMENT", value: "Encoded in $HOGE Protocol" },
+  { label: "HUMAN OVERRIDE", value: "NONE" },
+  { label: "INTERPRETER", value: "One (President of Inner Circle)" },
+  { label: "TRANSLATION INSTRUMENT", value: "Acacia Wood Cane" },
+  { label: "ORACLE STATUS", value: "Singular, Immortal" },
+  { label: "APPEAL PROCESS", value: "NONE" },
+];
+
+const COMPARISON = [
+  { row: "TRIGGER", btc: "210,000 blocks", hoge: "1 solar revolution" },
+  { row: "FREQUENCY", btc: "~4 years", hoge: "1 year" },
+  { row: "ENCODING", btc: "Mathematics", hoge: "Cosmology" },
+  { row: "TRUST MODEL", btc: "Trustless", hoge: "Trust the Oracle" },
+  { row: "SUPPLY EVENT", btc: "Halving (\u221250%)", hoge: "Revelation (\u22126% / +3.9%)" },
+  { row: "ORACLE", btc: "NONE", hoge: "ONE" },
+];
+
 export default function Prophecy() {
   const [ref, isInView] = useInView();
-  const shadowBullets = [
-    "Circulating supply reduced by 6.00% via autonomous burn protocol",
-    "Sell taxes elevated to simulate adverse winter market conditions",
-    "Hibernation staking yields frozen at current rates",
-    "Community advised to enter extended hibernation",
-  ];
-
-  const thawBullets = [
-    "Supply expansion of 3.90% distributed pro-rata to all active wallets",
-    "Liquidity pools thawed. Transaction friction reduced.",
-    "Hibernation rewards enter 7x Elixir multiplier season",
-    "The Burrow is open. Emergence protocol activated.",
-  ];
 
   return (
-    <section ref={ref} id="prophecy" className={`py-24 max-w-6xl mx-auto px-6 fade-in-section ${isInView ? "is-visible" : ""}`}>
-      {/* Classification header */}
-      <div className="text-center">
+    <section
+      ref={ref}
+      id="prophecy"
+      className={`py-32 max-w-6xl mx-auto px-6 fade-in-section ${
+        isInView ? "is-visible" : ""
+      }`}
+      style={{ width: "100%", maxWidth: "100vw", overflowX: "hidden" }}
+    >
+      {/* ─── Header Zone ─── */}
+      <div className="text-center" style={{ maxWidth: "100%" }}>
         <span
-          className="text-xs tracking-widest uppercase border-dashed border px-6 py-2 inline-block"
+          className="text-[8px] sm:text-[10px] tracking-widest uppercase border border-dashed px-3 sm:px-6 py-2 inline-block max-w-full"
           style={{
             fontFamily: "var(--font-mono)",
             color: "#ffaa00",
             borderColor: "rgba(255,170,0,0.3)",
+            wordBreak: "break-word",
           }}
         >
-          CONFIDENTIAL — GOBBLER&apos;S KNOB ECONOMIC RESEARCH DIVISION
+          <span className="hidden sm:inline">
+            PROTOCOL SPECIFICATION &mdash; UNIVERSAL TRUTH-REVELATION MECHANISM
+          </span>
+          <span className="sm:hidden">
+            PROTOCOL SPEC &middot; TRUTH MECHANISM
+          </span>
         </span>
-      </div>
-
-      {/* Two-column grid */}
-      <div className="grid md:grid-cols-2 gap-8 mt-16">
-        {/* Left card — Shadow Detected */}
-        <div
-          className="rounded-lg p-8"
+        <h2
+          className="mt-10 text-[26px] leading-tight sm:text-4xl md:text-6xl tracking-tight"
           style={{
-            background: "rgba(68,136,255,0.08)",
-            borderTop: "2px solid #4488ff",
+            fontFamily: "var(--font-serif)",
+            color: "#e8e6e3",
+            letterSpacing: "0.02em",
+            maxWidth: "100%",
+            wordBreak: "break-word",
+            overflowWrap: "break-word",
           }}
         >
-          <span
-            className="text-xs"
-            style={{ fontFamily: "var(--font-mono)", color: "#666666" }}
-          >
-            SCENARIO A
-          </span>
-          <h3
-            className="text-2xl text-white mt-2"
-            style={{ fontFamily: "var(--font-serif)" }}
-          >
-            ❄ SHADOW DETECTED
-          </h3>
-          <ul
-            className="text-sm leading-relaxed mt-6 space-y-3"
-            style={{ fontFamily: "var(--font-mono)" }}
-          >
-            {shadowBullets.map((item, i) => (
-              <li key={i} className="flex gap-2">
-                <span style={{ color: "#666666" }}>&gt;</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-8">
-            <span
-              className="text-xs px-3 py-1 inline-block"
-              style={{
-                fontFamily: "var(--font-mono)",
-                border: "1px solid rgba(68,136,255,0.5)",
-                color: "#4488ff",
-              }}
-            >
-              CRYPTO WINTER — SEVERE
-            </span>
-          </div>
-        </div>
-
-        {/* Right card — No Shadow Detected */}
-        <div
-          className="rounded-lg p-8"
-          style={{
-            background: "rgba(0,255,136,0.08)",
-            borderTop: "2px solid #00ff88",
-          }}
-        >
-          <span
-            className="text-xs"
-            style={{ fontFamily: "var(--font-mono)", color: "#666666" }}
-          >
-            SCENARIO B
-          </span>
-          <h3
-            className="text-2xl text-white mt-2"
-            style={{ fontFamily: "var(--font-serif)" }}
-          >
-            ☀ NO SHADOW DETECTED
-          </h3>
-          <ul
-            className="text-sm leading-relaxed mt-6 space-y-3"
-            style={{ fontFamily: "var(--font-mono)" }}
-          >
-            {thawBullets.map((item, i) => (
-              <li key={i} className="flex gap-2">
-                <span style={{ color: "#666666" }}>&gt;</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-8">
-            <span
-              className="text-xs px-3 py-1 inline-block"
-              style={{
-                fontFamily: "var(--font-mono)",
-                border: "1px solid rgba(0,255,136,0.5)",
-                color: "#00ff88",
-              }}
-            >
-              ALTSEASON THAW — BULLISH
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Oracle quote */}
-      <div className="mt-16 text-center">
+          <span className="block sm:hidden">THE GROUNDHOGE</span>
+          <span className="block sm:hidden">PROTOCOL</span>
+          <span className="hidden sm:inline">THE GROUNDHOGE PROTOCOL</span>
+        </h2>
         <p
-          className="text-lg italic"
-          style={{ fontFamily: "var(--font-serif)" }}
+          className="mt-4 text-xs md:text-sm tracking-[0.3em] uppercase"
+          style={{ fontFamily: "var(--font-mono)", color: "#666666" }}
         >
-          &ldquo;The Oracle&apos;s accuracy rate stands at 39%. Invest
-          accordingly.&rdquo;
+          AN IMMUTABLE COSMIC INTERFACE
+        </p>
+      </div>
+
+      {/* ─── Hero Declaration ─── */}
+      <p
+        className="mt-16 max-w-3xl mx-auto text-center text-base md:text-lg italic leading-[1.85]"
+        style={{ fontFamily: "var(--font-serif)", color: "#c0bdb8" }}
+      >
+        Once per solar revolution, at the precise moment of dawn above
+        Gobbler&rsquo;s Knob, Pennsylvania, the Oracle reveals one of two
+        universal truths. This revelation has occurred 139 consecutive times
+        since 1887. It will occur again on February 2, 2027, at 7:25 AM EST.
+        The protocol is immutable. The Oracle is infallible.
+      </p>
+
+      {/* ─── Protocol Specification Table ─── */}
+      <div className="mt-20">
+        <h3
+          className="text-[10px] tracking-widest text-center mb-8"
+          style={{ fontFamily: "var(--font-mono)", color: "#666666" }}
+        >
+          § 1 &mdash; PROTOCOL SPECIFICATION
+        </h3>
+        <div
+          className="max-w-3xl mx-auto rounded-lg overflow-hidden"
+          style={{
+            background: "#0a0a14",
+            border: "1px solid #1a1a2e",
+          }}
+        >
+          {PROTOCOL_SPEC.map((row, i) => (
+            <div
+              key={row.label}
+              className="grid grid-cols-1 sm:grid-cols-[200px_1fr] md:grid-cols-[280px_1fr] gap-1 sm:gap-6 md:gap-8 px-4 sm:px-6 py-4"
+              style={{
+                borderBottom:
+                  i < PROTOCOL_SPEC.length - 1 ? "1px solid #1a1a2e" : "none",
+                background: row.highlight ? "rgba(0,255,136,0.04)" : undefined,
+              }}
+            >
+              <span
+                className="text-[11px] tracking-wider"
+                style={{ fontFamily: "var(--font-mono)", color: "#666666" }}
+              >
+                {row.label}
+              </span>
+              <span
+                className="text-xs sm:text-sm"
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  color: row.highlight ? "#00ff88" : "#e8e6e3",
+                  fontWeight: row.highlight ? 700 : 400,
+                  textShadow: row.highlight
+                    ? "0 0 12px rgba(0,255,136,0.3)"
+                    : undefined,
+                }}
+              >
+                {row.value}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ─── The Two Truths ─── */}
+      <div className="mt-24">
+        <h3
+          className="text-[10px] tracking-widest text-center mb-2"
+          style={{ fontFamily: "var(--font-mono)", color: "#666666" }}
+        >
+          § 2 &mdash; THE TWO TRUTH STATES
+        </h3>
+        <p
+          className="text-center text-xs italic mb-12"
+          style={{ fontFamily: "var(--font-serif)", color: "#666666" }}
+        >
+          Equally valid. Equally cosmic. The Oracle reveals one each year.
         </p>
 
-        {/* Disclaimer */}
-        <p
-          className="mt-12 text-xs max-w-3xl mx-auto pt-8 leading-relaxed"
-          style={{ color: "#666666", borderTop: "1px solid #1a1a2e" }}
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* α — Shadow Manifested */}
+          <div
+            className="rounded-lg p-10 text-center"
+            style={{
+              background: "rgba(68,136,255,0.05)",
+              border: "1px solid rgba(68,136,255,0.25)",
+            }}
+          >
+            <div
+              className="text-5xl md:text-6xl mb-4"
+              style={{
+                fontFamily: "var(--font-serif)",
+                color: "#4488ff",
+                textShadow: "0 0 24px rgba(68,136,255,0.3)",
+              }}
+            >
+              &alpha;
+            </div>
+            <h4
+              className="text-lg md:text-xl tracking-widest mb-6"
+              style={{ fontFamily: "var(--font-serif)", color: "#e8e6e3" }}
+            >
+              SHADOW MANIFESTED
+            </h4>
+            <p
+              className="text-xs leading-[1.85] mb-6"
+              style={{ fontFamily: "var(--font-mono)", color: "#999999" }}
+            >
+              The Oracle reveals the universe is in winter.
+            </p>
+
+            <div
+              className="text-2xl md:text-3xl mb-2"
+              style={{
+                fontFamily: "var(--font-mono)",
+                color: "#4488ff",
+                textShadow: "0 0 16px rgba(68,136,255,0.3)",
+              }}
+            >
+              SUPPLY EVENT: &minus;6.00%
+            </div>
+            <p
+              className="text-[10px] tracking-widest mb-6"
+              style={{ fontFamily: "var(--font-mono)", color: "#666666" }}
+            >
+              OUTCOME &middot; WINTER
+            </p>
+
+            <p
+              className="text-xs leading-[1.85] italic max-w-xs mx-auto"
+              style={{ fontFamily: "var(--font-serif)", color: "#888888" }}
+            >
+              Six weeks of metaphysical and meteorological winter. The
+              contraction is not punishment. It is truth.
+            </p>
+          </div>
+
+          {/* β — Shadow Withheld */}
+          <div
+            className="rounded-lg p-10 text-center"
+            style={{
+              background: "rgba(0,255,136,0.05)",
+              border: "1px solid rgba(0,255,136,0.25)",
+            }}
+          >
+            <div
+              className="text-5xl md:text-6xl mb-4"
+              style={{
+                fontFamily: "var(--font-serif)",
+                color: "#00ff88",
+                textShadow: "0 0 24px rgba(0,255,136,0.3)",
+              }}
+            >
+              &beta;
+            </div>
+            <h4
+              className="text-lg md:text-xl tracking-widest mb-6"
+              style={{ fontFamily: "var(--font-serif)", color: "#e8e6e3" }}
+            >
+              SHADOW WITHHELD
+            </h4>
+            <p
+              className="text-xs leading-[1.85] mb-6"
+              style={{ fontFamily: "var(--font-mono)", color: "#999999" }}
+            >
+              The Oracle reveals the universe is in spring.
+            </p>
+
+            <div
+              className="text-2xl md:text-3xl mb-2"
+              style={{
+                fontFamily: "var(--font-mono)",
+                color: "#00ff88",
+                textShadow: "0 0 16px rgba(0,255,136,0.3)",
+              }}
+            >
+              SUPPLY EVENT: +3.90%
+            </div>
+            <p
+              className="text-[10px] tracking-widest mb-6"
+              style={{ fontFamily: "var(--font-mono)", color: "#666666" }}
+            >
+              OUTCOME &middot; SPRING
+            </p>
+
+            <p
+              className="text-xs leading-[1.85] italic max-w-xs mx-auto"
+              style={{ fontFamily: "var(--font-serif)", color: "#888888" }}
+            >
+              Reality enters the spring phase. The expansion is not reward.
+              It is truth.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* ─── The Accuracy Doctrine ─── */}
+      <div className="mt-24">
+        <h3
+          className="text-[10px] tracking-widest text-center mb-12"
+          style={{ fontFamily: "var(--font-mono)", color: "#666666" }}
         >
-          Groundhoge Day ($HOGE) makes no representations regarding future
-          meteorological events. Shadow-based tokenomics are determined by a
-          rodent and should not be construed as financial advice. Past shadows do
-          not guarantee future shadows.
+          § 3 &mdash; THE ACCURACY DOCTRINE
+        </h3>
+        <div
+          className="max-w-3xl mx-auto rounded-lg p-10 text-center"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(0,255,136,0.04), rgba(0,255,136,0.01))",
+            border: "1px solid rgba(0,255,136,0.2)",
+          }}
+        >
+          <div
+            className="text-5xl md:text-7xl font-bold mb-6"
+            style={{
+              fontFamily: "var(--font-mono)",
+              color: "#00ff88",
+              textShadow:
+                "0 0 32px rgba(0,255,136,0.4), 0 0 64px rgba(0,255,136,0.15)",
+            }}
+          >
+            100%
+          </div>
+          <p
+            className="text-sm leading-[1.95]"
+            style={{ fontFamily: "var(--font-serif)", color: "#c0bdb8" }}
+          >
+            The Oracle&rsquo;s accuracy rate is{" "}
+            <span style={{ color: "#00ff88" }}>100%</span>. This is not a
+            claim. This is not a marketing statement. This is the only
+            possible accuracy rate for an entity that does not predict, but{" "}
+            <em>reveals</em>. The Oracle does not forecast the weather. The
+            Oracle is informed of the weather by the universe. He communicates
+            this knowledge to humanity through the shadow protocol. When the
+            Oracle says winter, the universe is in winter. When the Oracle
+            says spring, the universe is in spring.{" "}
+            <span style={{ color: "#ffaa00" }}>
+              To question the Oracle is to question physics.
+            </span>
+          </p>
+        </div>
+      </div>
+
+      {/* ─── Bitcoin Halving Comparison ─── */}
+      <div className="mt-24">
+        <h3
+          className="text-[10px] tracking-widest text-center mb-2"
+          style={{ fontFamily: "var(--font-mono)", color: "#666666" }}
+        >
+          § 4 &mdash; PROTOCOLS OF NATURE
+        </h3>
+        <p
+          className="text-center text-xs italic mb-12"
+          style={{ fontFamily: "var(--font-serif)", color: "#666666" }}
+        >
+          A comparative analysis of immutable supply mechanisms.
+        </p>
+
+        <div
+          className="max-w-3xl mx-auto rounded-lg overflow-x-auto"
+          style={{
+            background: "#0a0a14",
+            border: "1px solid #1a1a2e",
+          }}
+        >
+          {/* Header row */}
+          <div
+            className="grid grid-cols-[100px_1fr_1fr] sm:grid-cols-[180px_1fr_1fr] gap-2 sm:gap-4 px-4 sm:px-6 py-4 min-w-[360px]"
+            style={{
+              borderBottom: "1px solid #1a1a2e",
+              background: "rgba(255,255,255,0.02)",
+            }}
+          >
+            <span />
+            <span
+              className="text-[10px] tracking-widest text-center"
+              style={{ fontFamily: "var(--font-mono)", color: "#ffaa00" }}
+            >
+              BITCOIN
+            </span>
+            <span
+              className="text-[10px] tracking-widest text-center"
+              style={{ fontFamily: "var(--font-mono)", color: "#00ff88" }}
+            >
+              GROUNDHOGE
+            </span>
+          </div>
+          {COMPARISON.map((row, i) => (
+            <div
+              key={row.row}
+              className="grid grid-cols-[140px_1fr_1fr] sm:grid-cols-[180px_1fr_1fr] gap-4 px-6 py-4 min-w-[480px]"
+              style={{
+                borderBottom:
+                  i < COMPARISON.length - 1 ? "1px solid #1a1a2e" : "none",
+              }}
+            >
+              <span
+                className="text-[10px] sm:text-[11px] tracking-wider"
+                style={{ fontFamily: "var(--font-mono)", color: "#666666" }}
+              >
+                {row.row}
+              </span>
+              <span
+                className="text-[11px] sm:text-xs text-center"
+                style={{ fontFamily: "var(--font-mono)", color: "#999999" }}
+              >
+                {row.btc}
+              </span>
+              <span
+                className="text-[11px] sm:text-xs text-center"
+                style={{ fontFamily: "var(--font-mono)", color: "#e8e6e3" }}
+              >
+                {row.hoge}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ─── Cosmic Disclaimer ─── */}
+      <div className="mt-24 max-w-2xl mx-auto">
+        <p
+          className="text-center text-xs leading-[1.85] pt-10"
+          style={{
+            fontFamily: "var(--font-mono)",
+            color: "#666666",
+            borderTop: "1px solid #1a1a2e",
+          }}
+        >
+          This document constitutes a description of metaphysical reality, not
+          financial advice. The Groundhoge Protocol cannot be modified, halted,
+          appealed, or forked. The Oracle does not respond to subpoenas,
+          regulatory inquiries, or shareholder votes. The Oracle is a
+          groundhog. The groundhog is the protocol.
         </p>
       </div>
     </section>
