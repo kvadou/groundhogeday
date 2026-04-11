@@ -124,7 +124,7 @@ export default function BiologicalResearch() {
           {IDENTIFICATION.map((item) => (
             <div
               key={item.label}
-              className="grid grid-cols-[220px_1fr] gap-4 text-xs items-baseline"
+              className="grid grid-cols-1 sm:grid-cols-[220px_1fr] gap-1 sm:gap-4 text-xs items-baseline"
               style={{ lineHeight: 1.6 }}
             >
               <span style={{ color: "#666666" }}>{item.label}</span>
@@ -254,8 +254,8 @@ export default function BiologicalResearch() {
               }}
             >
               <span
-                className="shrink-0"
-                style={{ color: "#666666", minWidth: "180px" }}
+                className="shrink-0 min-w-[120px] sm:min-w-[180px]"
+                style={{ color: "#666666" }}
               >
                 {stat.label}:
               </span>
@@ -367,8 +367,8 @@ export default function BiologicalResearch() {
               className="flex gap-3 text-xs items-baseline"
             >
               <span
-                className="shrink-0"
-                style={{ color: "#666666", minWidth: "160px" }}
+                className="shrink-0 min-w-[100px] sm:min-w-[160px]"
+                style={{ color: "#666666" }}
               >
                 {alias.region}
               </span>

@@ -10,9 +10,12 @@ const TOC: TocEntry[] = [
   { id: "origins", label: "Ancient Origins" },
   { id: "pennsylvania", label: "The Pennsylvania German Tradition" },
   { id: "inner-circle", label: "The Inner Circle" },
+  { id: "accuracy", label: "The Oracle's Accuracy" },
   { id: "phil", label: "Phil — The Complete Biography" },
+  { id: "species", label: "Species Dossier" },
   { id: "rivals", label: "The Rival Oracles" },
   { id: "1943", label: "The 1943 Interruption" },
+  { id: "culture", label: "The 1993 Cultural Event" },
   { id: "timeline", label: "Timeline" },
 ];
 
@@ -72,6 +75,54 @@ const RIVALS = [
     color: "#ff6644",
     bio: `Achieved national fame in 2015 when he bit Mayor Jon Freund's ear during the live ceremony. The mayor, bleeding visibly, continued reading the proclamation. Jimmy's handlers later explained that the groundhog was "stressed by the crowd noise." Jimmy has since been retired from public ceremonies but continues to make predictions from the safety of his enclosure, communicated via press release.`,
   },
+];
+
+/* ─── Accuracy comparison data ─── */
+const ACCURACY_DATA = [
+  { label: "OCTOPUS PAUL (2010 World Cup)", pct: 85.7, color: "#00ff88" },
+  { label: "COIN FLIP (THEORETICAL)", pct: 50.0, color: "#4488ff" },
+  { label: "WEATHER APPS IN MARCH", pct: 47.0, color: "#4488ff" },
+  { label: "THE ORACLE (PUNXSUTAWNEY)", pct: 39.0, color: "#ffaa00", highlight: true },
+  { label: "FINANCIAL ANALYSTS (CNBC)", pct: 38.0, color: "#ff4444" },
+  { label: "DART-THROWING CHIMPANZEE", pct: 33.3, color: "#ff4444" },
+  { label: "MAGIC 8-BALL", pct: 25.0, color: "#ff4444" },
+];
+
+/* ─── Species identification data ─── */
+const IDENTIFICATION = [
+  { label: "SPECIES DESIGNATION:", value: "Marmota monax", color: "#e8e6e3" },
+  { label: "COMMON ALIASES:", value: "Groundhog, Woodchuck, Whistle-pig, Land Beaver, Thickwood Badger", color: "#e8e6e3" },
+  { label: "FRENCH-CANADIAN DESIGNATION:", value: "Siffleux", color: "#e8e6e3" },
+  { label: "CODENAME:", value: "WHISTLE-PIG", color: "#00ff88", highlight: true },
+  { label: "FAMILY:", value: "Sciuridae (Squirrel family \u2014 CLASSIFIED)", color: "#e8e6e3" },
+  { label: "STATUS:", value: "NOT ENDANGERED \u2014 CONSIDERED ABUNDANT", color: "#00ff88" },
+];
+
+const VITAL_SIGNS = [
+  { label: "CORE TEMPERATURE", value: "Drops from 99\u00b0F (37\u00b0C) to as low as 35\u00b0F (2\u00b0C)" },
+  { label: "HEART RATE", value: "Drops from 80 BPM to 4\u201310 BPM" },
+  { label: "RESPIRATION", value: "Drops to 1 breath every 6 minutes" },
+  { label: "BODY MASS LOSS", value: "Approximately 50% by February" },
+  { label: "DURATION", value: "October through February (varies by latitude)" },
+];
+
+const CAPABILITIES = [
+  { label: "AQUATIC CAPABILITY:", text: "Confirmed. Subjects are accomplished swimmers." },
+  { label: "ARBOREAL CAPABILITY:", text: "Confirmed. Subjects will climb trees to evade terrestrial threats." },
+  { label: "EXCAVATION CAPABILITY:", text: "Extreme. A single burrow system can displace 35 cubic feet (1 cubic meter) of earth. Burrow networks include multiple chambers, exits, and a dedicated toilet room." },
+  { label: "DENTAL ARMAMENT:", text: "Ivory-white incisors (unique among rodents \u2014 most rodent incisors are yellow). Growth rate: 1.5mm per week. Weaponization potential: CLASSIFIED." },
+  { label: "DOCUMENTED ATTACKS:", text: "The subject has bitten multiple public officials including mayors and actors. See: Department of Cultural Affairs, Incident Report 1993." },
+];
+
+const ALIASES = [
+  { region: "Pennsylvania German:", name: "Grundsow" },
+  { region: "Appalachian:", name: "Whistle-pig" },
+  { region: "Canadian French:", name: "Siffleux" },
+  { region: "Scientific:", name: "Marmota monax" },
+  { region: "Colonial American:", name: "Land beaver" },
+  { region: "British colonial:", name: "Thickwood badger" },
+  { region: "Inner Circle:", name: "The Oracle" },
+  { region: "$HOGE Community:", name: "The Seer" },
 ];
 
 /* ─── Timeline data ─── */
@@ -324,8 +375,104 @@ export default function LegendsContent() {
             </P>
           </Section>
 
-          {/* ── SECTION 4: PHIL — COMPLETE BIOGRAPHY ── */}
-          <Section id="phil" title="Phil &mdash; The Complete Biography" number="04">
+          {/* ── SECTION 4: THE ORACLE'S ACCURACY ── */}
+          <Section id="accuracy" title="The Oracle&rsquo;s Accuracy" number="04">
+            <P>
+              The Inner Circle claims Phil has maintained a <Strong>100% accuracy rate</Strong> across
+              his entire career. Independent meteorological analysis tells a different story: Phil&apos;s
+              predictions correlate with actual weather outcomes approximately <Strong>39% of the
+              time</Strong> &mdash; which is worse than a coin flip.
+            </P>
+            <P>
+              The numbers paint a stark picture. Over <Strong>140+ years of service</Strong>, Phil has
+              issued <Strong>129 recorded predictions</Strong>. Of those, <Strong>109 have been shadow
+              calls</Strong> (six more weeks of winter) and only <Strong>20 have been no-shadow
+              calls</Strong> (early spring). Phil overwhelmingly favors winter. The remaining years have
+              no recorded prediction &mdash; including the 1943 wartime cancellation.
+            </P>
+
+            {/* Comparative accuracy chart */}
+            <div
+              className="rounded-lg p-6 md:p-8 my-8"
+              style={{ background: "#0a0a14", border: "1px solid #1a1a2e" }}
+            >
+              <p
+                className="text-[10px] tracking-[0.3em] uppercase mb-6"
+                style={{ fontFamily: "var(--font-mono)", color: "#666666" }}
+              >
+                Comparative Accuracy Analysis
+              </p>
+              <div className="space-y-3">
+                {ACCURACY_DATA.map((row) => (
+                  <div
+                    key={row.label}
+                    className="flex items-center gap-4"
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      padding: row.highlight ? "8px" : "4px 8px",
+                      borderRadius: row.highlight ? "6px" : undefined,
+                      border: row.highlight ? `1px solid ${row.color}44` : undefined,
+                      background: row.highlight ? `${row.color}08` : undefined,
+                    }}
+                  >
+                    <span
+                      className="text-[10px] sm:text-xs shrink-0 text-right"
+                      style={{
+                        color: row.highlight ? row.color : "#e8e6e3",
+                        width: "220px",
+                        minWidth: "140px",
+                        fontWeight: row.highlight ? 700 : 400,
+                      }}
+                    >
+                      {row.label}
+                    </span>
+                    <div className="flex-1 h-5 rounded overflow-hidden" style={{ background: "#111122" }}>
+                      <div
+                        className="h-full rounded"
+                        style={{
+                          width: `${row.pct}%`,
+                          background: `linear-gradient(90deg, ${row.color}cc, ${row.color})`,
+                          boxShadow: `0 0 10px ${row.color}44`,
+                        }}
+                      />
+                    </div>
+                    <span
+                      className="text-xs shrink-0 w-14 text-right"
+                      style={{
+                        color: row.color,
+                        fontWeight: row.highlight ? 700 : 400,
+                      }}
+                    >
+                      {row.pct.toFixed(1)}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <P>
+              For context: Octopus Paul, a cephalopod who predicted 2010 World Cup outcomes by
+              choosing between two food boxes, achieved an <Strong>85.7% accuracy rate</Strong> in a
+              single tournament. A coin flip would hit 50%. CNBC financial analysts land at 38%.
+              Phil sits comfortably between a dart-throwing chimpanzee and a coin toss.
+            </P>
+            <P>
+              The Inner Circle&apos;s official position on this data is characteristically
+              uncompromising: any discrepancy between Phil&apos;s forecast and observed meteorological
+              conditions is attributable to <Strong>translation error</Strong> on the part of the
+              presiding human interpreter. Phil communicates in Groundhogese, a language of considerable
+              nuance. The acacia cane is old. Mistranslations are expected. The Oracle himself has never
+              been wrong &mdash; his translators have simply failed him 61% of the time.
+            </P>
+            <P>
+              The Gobbler&apos;s Knob Research Division, which compiled this accuracy report, is funded
+              entirely by the Inner Circle and has never found fault with the Oracle&apos;s methodology.
+              Peer review requests have been denied on grounds of national security.
+            </P>
+          </Section>
+
+          {/* ── SECTION 5: PHIL — COMPLETE BIOGRAPHY ── */}
+          <Section id="phil" title="Phil &mdash; The Complete Biography" number="05">
             <P>
               According to the Inner Circle, there has only ever been <Strong>one
               Punxsutawney Phil</Strong>. The same groundhog who made the first official
@@ -376,8 +523,153 @@ export default function LegendsContent() {
             </P>
           </Section>
 
-          {/* ── SECTION 5: RIVAL ORACLES ── */}
-          <Section id="rivals" title="The Rival Oracles" number="05">
+          {/* ── SECTION 6: SPECIES DOSSIER ── */}
+          <Section id="species" title="Species Dossier" number="06">
+            <P>
+              Before we catalog the rival oracles, a biological primer on the creature itself is
+              warranted. The Oracle is, beneath the prophecy and the politics, a member of the species
+              <Strong>Marmota monax</Strong> &mdash; the largest member of the squirrel family. Yes,
+              the squirrel family. That information is classified for a reason.
+            </P>
+
+            {/* Identification panel */}
+            <div
+              className="rounded-lg p-6 my-8"
+              style={{ background: "#0a0a14", border: "1px solid #1a1a2e", fontFamily: "var(--font-mono)" }}
+            >
+              <p
+                className="text-[10px] tracking-[0.3em] uppercase mb-5 pb-3"
+                style={{ color: "#666666", borderBottom: "1px solid #1a1a2e" }}
+              >
+                Identification Panel
+              </p>
+              <div className="grid gap-3">
+                {IDENTIFICATION.map((item) => (
+                  <div
+                    key={item.label}
+                    className="grid grid-cols-[180px_1fr] sm:grid-cols-[220px_1fr] gap-4 text-xs items-baseline"
+                    style={{ lineHeight: 1.6 }}
+                  >
+                    <span style={{ color: "#666666" }}>{item.label}</span>
+                    <span
+                      style={{
+                        color: item.color,
+                        ...(item.highlight
+                          ? {
+                              background: "rgba(0, 255, 136, 0.08)",
+                              padding: "2px 8px",
+                              border: "1px solid rgba(0, 255, 136, 0.2)",
+                              display: "inline-block",
+                            }
+                          : {}),
+                      }}
+                    >
+                      {item.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <P>
+              <Strong>A critical etymological correction:</Strong> the name &ldquo;woodchuck&rdquo; has
+              no connection whatsoever to the chucking of wood. It derives from the Algonquian word
+              &ldquo;wuchak.&rdquo; The popular tongue-twister is based on a linguistic misunderstanding
+              and has been flagged for decommissioning since 1978. The request remains pending. The name
+              &ldquo;whistle-pig&rdquo; derives from the subject&apos;s alarm call &mdash; a high-pitched
+              whistle used to warn colony members of incoming threats, described as &ldquo;surprisingly
+              piercing for a creature of that girth.&rdquo;
+            </P>
+
+            <P>
+              The subject is one of few mammalian species that enters <Strong>true hibernation</Strong>
+              &mdash; not merely torpor or extended sleep. The physiological transformation is extreme:
+            </P>
+
+            {/* Vital signs */}
+            <div
+              className="rounded-lg p-5 my-8"
+              style={{ background: "#0a0a14", border: "1px solid #1a1a2e", fontFamily: "var(--font-mono)" }}
+            >
+              <p
+                className="text-[10px] tracking-[0.3em] uppercase mb-4"
+                style={{ color: "#4488ff" }}
+              >
+                Hibernation Vital Signs
+              </p>
+              {VITAL_SIGNS.map((stat, i) => (
+                <div
+                  key={stat.label}
+                  className="flex items-baseline gap-4 text-xs py-2"
+                  style={{
+                    borderBottom: i < VITAL_SIGNS.length - 1 ? "1px solid rgba(26, 26, 46, 0.6)" : "none",
+                  }}
+                >
+                  <span className="shrink-0" style={{ color: "#666666", minWidth: "180px" }}>{stat.label}:</span>
+                  <span style={{ color: "#00ff88" }}>{stat.value}</span>
+                </div>
+              ))}
+            </div>
+
+            <P>
+              A heart rate of <Strong>4 BPM</Strong>. One breath every <Strong>six minutes</Strong>.
+              Core temperature dropping to 35&deg;F. By February, the subject has lost approximately
+              half its body mass. Military and medical researchers study groundhog hibernation to develop
+              techniques for safely lowering human heart rates during complex surgeries and for
+              understanding Hepatitis B-induced liver cancer.
+            </P>
+
+            <P>
+              Despite a rotund physique that suggests limited mobility, the subject demonstrates
+              unexpectedly advanced physical capabilities:
+            </P>
+
+            <div className="my-6 space-y-3" style={{ fontFamily: "var(--font-mono)" }}>
+              {CAPABILITIES.map((cap) => (
+                <div key={cap.label} className="flex gap-3 text-xs" style={{ lineHeight: 1.8 }}>
+                  <span style={{ color: "#666666", userSelect: "none" }}>&gt;</span>
+                  <p>
+                    <span style={{ color: "#ffaa00" }}>{cap.label}</span>{" "}
+                    <span style={{ color: "#c0bdb8" }}>{cap.text}</span>
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <P>
+              The subject operates under numerous aliases across regions and languages &mdash; a partial
+              registry from the operational database:
+            </P>
+
+            <div
+              className="rounded-lg p-5 my-8"
+              style={{ background: "#0a0a14", border: "1px solid #1a1a2e", fontFamily: "var(--font-mono)" }}
+            >
+              <p
+                className="text-[10px] tracking-[0.3em] uppercase mb-4"
+                style={{ color: "#666666" }}
+              >
+                Operational Aliases Database
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
+                {ALIASES.map((alias) => (
+                  <div key={alias.region} className="flex gap-3 text-xs items-baseline">
+                    <span className="shrink-0" style={{ color: "#666666", minWidth: "160px" }}>{alias.region}</span>
+                    <span style={{ color: "#e8e6e3" }}>{alias.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <P>
+              This dossier is maintained by the Bureau of Biological Research, a division of the
+              Groundhoge Day Economic Authority. All findings are considered preliminary pending the
+              Oracle&apos;s review. The Oracle has not reviewed any findings since 1887.
+            </P>
+          </Section>
+
+          {/* ── SECTION 7: RIVAL ORACLES ── */}
+          <Section id="rivals" title="The Rival Oracles" number="07">
             <P>
               Phil is the most famous prognosticator, but he is far from the only one. Across
               North America, a network of rival oracles — groundhogs, opossums, beavers, and
@@ -421,8 +713,8 @@ export default function LegendsContent() {
             </div>
           </Section>
 
-          {/* ── SECTION 6: THE 1943 INTERRUPTION ── */}
-          <Section id="1943" title="The 1943 Interruption" number="06">
+          {/* ── SECTION 8: THE 1943 INTERRUPTION ── */}
+          <Section id="1943" title="The 1943 Interruption" number="08">
             <P>
               In the 138-year history of Groundhog Day at Gobbler&apos;s Knob, there has
               been exactly <Strong>one cancellation</Strong>: 1943.
@@ -455,8 +747,103 @@ export default function LegendsContent() {
             </P>
           </Section>
 
-          {/* ── SECTION 7: TIMELINE ── */}
-          <Section id="timeline" title="Timeline" number="07">
+          {/* ── SECTION 9: THE 1993 CULTURAL EVENT ── */}
+          <Section id="culture" title="The 1993 Cultural Event" number="09">
+            <P>
+              In 1993, Columbia Pictures released what would become one of the most significant cultural
+              artifacts in the history of February 2nd. A production depicting a meteorologist trapped
+              in a temporal anomaly &mdash; forced to relive Groundhog Day in Punxsutawney until he
+              achieves moral transformation &mdash; permanently altered the holiday&apos;s place in
+              American consciousness.
+            </P>
+            <P>
+              <Strong>Production intelligence:</Strong> Despite being set in Punxsutawney, the
+              production was filmed entirely in Woodstock, Illinois. The real Punxsutawney was deemed
+              &ldquo;too isolated&rdquo; and &ldquo;lacking adequate town square infrastructure.&rdquo;
+              Casting alternatives considered included Tom Hanks, Chevy Chase, and Michael Keaton before
+              Subject Murray was selected. During production, the groundhog (codename: SCOOTER) bit
+              Subject Murray on the knuckle twice, drawing blood through protective gloves. Subject
+              Murray completed filming.
+            </P>
+            <P>
+              The exact duration of the depicted temporal anomaly remains classified. Multiple
+              intelligence estimates exist:
+            </P>
+
+            {/* Duration estimates table */}
+            <div
+              className="rounded-lg overflow-hidden my-8"
+              style={{ border: "1px solid #1a1a2e", fontFamily: "var(--font-mono)" }}
+            >
+              <div
+                className="grid grid-cols-2 gap-4 px-5 py-2"
+                style={{ background: "rgba(255,255,255,0.02)" }}
+              >
+                <span className="text-[10px] tracking-[0.3em] uppercase" style={{ color: "#666666" }}>Assessment</span>
+                <span className="text-[10px] tracking-[0.3em] uppercase" style={{ color: "#666666" }}>Duration</span>
+              </div>
+              {[
+                ["INITIAL ASSESSMENT (Director)", "~10 years"],
+                ["REVISED ASSESSMENT (Director, 2006)", "30\u201340 years"],
+                ["ORIGINAL DRAFT ESTIMATE", "70\u201380 years (book-reading tracking method)"],
+                ["10,000-HOUR RULE ANALYSIS", "~12,400 days (33.9 years) \u2014 calculated from observed skill acquisition"],
+              ].map((row, i) => (
+                <div
+                  key={i}
+                  className="grid grid-cols-2 gap-4 px-5 py-3"
+                  style={{ borderTop: "1px solid #1a1a2e", background: "#0a0a14" }}
+                >
+                  <span className="text-xs" style={{ color: "#e8e6e3" }}>{row[0]}</span>
+                  <span className="text-xs" style={{ color: "#999999" }}>{row[1]}</span>
+                </div>
+              ))}
+            </div>
+
+            <P>
+              The subject demonstrated fluency in French, mastery of ice sculpture, advanced piano
+              performance, and comprehensive knowledge of every resident&apos;s daily schedule. These
+              competencies are consistent with the 30&ndash;40 year estimate.
+            </P>
+            <P>
+              <Strong>Collateral damage:</Strong> The production caused significant interpersonal damage
+              between Subject Murray and Director Ramis. The two had previously collaborated on three
+              major operations (1980, 1981, 1984). Creative disagreements during production escalated to
+              non-communication &mdash; Subject Murray sought a philosophical production while Director
+              Ramis maintained romantic comedy parameters. Approximately 20 years of silence followed.
+              Communication resumed only in the final months before Director Ramis&apos;s passing in 2014.
+            </P>
+            <P>
+              <Strong>Linguistic contamination:</Strong> The 1993 incident permanently altered the English
+              language. The phrase &ldquo;Groundhog Day&rdquo; was weaponized by the general population to
+              describe any repetitive, monotonous, or seemingly inescapable situation. Major dictionaries
+              now carry a secondary definition: &ldquo;a situation in which events are or appear to be
+              continually repeated.&rdquo; Political deployment occurred as early as the 1996 U.S.
+              presidential campaign. During the COVID-19 lockdowns, the phrase experienced a <Strong>4,000%
+              usage spike</Strong> as populations experienced actual temporal loop conditions. The website
+              TV Tropes officially classifies the time loop narrative device as the &ldquo;Groundhog Day
+              Loop&rdquo; &mdash; with 47+ derivative works catalogued across film, television, and
+              interactive media. Derivative works include Source Code (2011), Edge of Tomorrow (2014),
+              Happy Death Day (2017), Palm Springs (2020), and Russian Doll (series).
+            </P>
+            <P>
+              <Strong>Spiritual assessment:</Strong> Multiple religious and philosophical traditions have
+              independently claimed the 1993 production as a spiritual text. Buddhists read it as a
+              reincarnation allegory &mdash; the cycle of suffering and enlightenment. Christians see a
+              purgatory narrative &mdash; redemption through moral transformation. Jewish scholars
+              identify teshuvah (repentance) &mdash; performing moral deeds to break destructive patterns.
+              Mental health professionals recommend it to patients, and addiction recovery programs use it
+              as a metaphor for breaking repetitive cycles.
+            </P>
+            <P>
+              <Strong>Tourism impact:</Strong> Annual attendance at the Punxsutawney festival increased
+              from approximately <Strong>2,000 to 35,000+</Strong> following the cultural event&apos;s
+              release. The Library of Congress selected the production for preservation in the National
+              Film Registry in 2006. Its significance is no longer disputed.
+            </P>
+          </Section>
+
+          {/* ── SECTION 10: TIMELINE ── */}
+          <Section id="timeline" title="Timeline" number="10">
             <div className="relative mt-8 ml-4">
               {/* vertical line */}
               <div

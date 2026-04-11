@@ -120,7 +120,7 @@ export default function CulturalAffairs() {
           Department of Cultural Affairs
         </h2>
         <p
-          className="text-xl md:text-2xl tracking-widest uppercase"
+          className="text-sm md:text-xl lg:text-2xl tracking-widest uppercase"
           style={{ fontFamily: "var(--font-mono)", color: "#ffaa00" }}
         >
           Cultural Impact Assessment &mdash; Classified Briefing

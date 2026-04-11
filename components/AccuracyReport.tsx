@@ -89,7 +89,7 @@ export default function AccuracyReport() {
           {BAR_DATA.map((row) => (
             <div
               key={row.label}
-              className="flex items-center gap-4"
+              className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4"
               style={{
                 fontFamily: "var(--font-mono)",
                 padding: row.highlight ? "8px" : "4px 8px",
@@ -100,40 +100,40 @@ export default function AccuracyReport() {
               }}
             >
               <span
-                className="text-xs shrink-0 text-right"
+                className="text-xs shrink-0 sm:text-right sm:w-[260px] sm:min-w-[260px]"
                 style={{
                   color: row.highlight ? row.color : "#e8e6e3",
-                  width: "260px",
-                  minWidth: "260px",
                   fontWeight: row.highlight ? 700 : 400,
                 }}
               >
                 {row.label}
               </span>
-              <div className="flex-1 h-5 rounded overflow-hidden" style={{ background: "#111122" }}>
-                <div
-                  className="h-full rounded"
+              <div className="flex items-center gap-2 sm:gap-4 flex-1">
+                <div className="flex-1 h-5 rounded overflow-hidden" style={{ background: "#111122" }}>
+                  <div
+                    className="h-full rounded"
+                    style={{
+                      width: isInView ? `${(row.pct / 100) * 100}%` : "0%",
+                      background: `linear-gradient(90deg, ${row.color}cc, ${row.color})`,
+                      boxShadow: `0 0 10px ${row.color}44`,
+                      transition: "width 1.2s cubic-bezier(0.22, 1, 0.36, 1)",
+                      transitionDelay: row.highlight ? "0.4s" : "0.2s",
+                      height: row.highlight ? "24px" : "20px",
+                      marginTop: row.highlight ? "-2px" : undefined,
+                    }}
+                  />
+                </div>
+                <span
+                  className="text-xs shrink-0 w-14 text-right"
                   style={{
-                    width: isInView ? `${(row.pct / 100) * 100}%` : "0%",
-                    background: `linear-gradient(90deg, ${row.color}cc, ${row.color})`,
-                    boxShadow: `0 0 10px ${row.color}44`,
-                    transition: "width 1.2s cubic-bezier(0.22, 1, 0.36, 1)",
-                    transitionDelay: row.highlight ? "0.4s" : "0.2s",
-                    height: row.highlight ? "24px" : "20px",
-                    marginTop: row.highlight ? "-2px" : undefined,
+                    color: row.color,
+                    fontWeight: row.highlight ? 700 : 400,
+                    textShadow: row.highlight ? `0 0 8px ${row.color}44` : undefined,
                   }}
-                />
+                >
+                  {row.pct.toFixed(1)}%
+                </span>
               </div>
-              <span
-                className="text-xs shrink-0 w-14 text-right"
-                style={{
-                  color: row.color,
-                  fontWeight: row.highlight ? 700 : 400,
-                  textShadow: row.highlight ? `0 0 8px ${row.color}44` : undefined,
-                }}
-              >
-                {row.pct.toFixed(1)}%
-              </span>
             </div>
           ))}
         </div>
