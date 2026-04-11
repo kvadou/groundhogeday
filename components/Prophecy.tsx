@@ -15,15 +15,6 @@ const PROTOCOL_SPEC = [
   { label: "APPEAL PROCESS", value: "NONE" },
 ];
 
-const COMPARISON = [
-  { row: "TRIGGER", btc: "210,000 blocks", hoge: "1 solar revolution" },
-  { row: "FREQUENCY", btc: "~4 years", hoge: "1 year" },
-  { row: "ENCODING", btc: "Mathematics", hoge: "Cosmology" },
-  { row: "TRUST MODEL", btc: "Trustless", hoge: "Trust the Oracle" },
-  { row: "SUPPLY EVENT", btc: "Halving (\u221250%)", hoge: "Revelation (\u22126% / +3.9%)" },
-  { row: "ORACLE", btc: "NONE", hoge: "ONE" },
-];
-
 export default function Prophecy() {
   const [ref, isInView] = useInView();
 
@@ -314,82 +305,6 @@ export default function Prophecy() {
               To question the Oracle is to question physics.
             </span>
           </p>
-        </div>
-      </div>
-
-      {/* ─── Bitcoin Halving Comparison ─── */}
-      <div className="mt-24">
-        <h3
-          className="text-[10px] tracking-widest text-center mb-2"
-          style={{ fontFamily: "var(--font-mono)", color: "#666666" }}
-        >
-          § 4 &mdash; PROTOCOLS OF NATURE
-        </h3>
-        <p
-          className="text-center text-xs italic mb-12"
-          style={{ fontFamily: "var(--font-serif)", color: "#666666" }}
-        >
-          A comparative analysis of immutable supply mechanisms.
-        </p>
-
-        <div
-          className="max-w-3xl mx-auto rounded-lg overflow-x-auto"
-          style={{
-            background: "#0a0a14",
-            border: "1px solid #1a1a2e",
-          }}
-        >
-          {/* Header row */}
-          <div
-            className="grid grid-cols-[100px_1fr_1fr] sm:grid-cols-[180px_1fr_1fr] gap-2 sm:gap-4 px-4 sm:px-6 py-4 min-w-[360px]"
-            style={{
-              borderBottom: "1px solid #1a1a2e",
-              background: "rgba(255,255,255,0.02)",
-            }}
-          >
-            <span />
-            <span
-              className="text-[10px] tracking-widest text-center"
-              style={{ fontFamily: "var(--font-mono)", color: "#ffaa00" }}
-            >
-              BITCOIN
-            </span>
-            <span
-              className="text-[10px] tracking-widest text-center"
-              style={{ fontFamily: "var(--font-mono)", color: "#00ff88" }}
-            >
-              GROUNDHOGE
-            </span>
-          </div>
-          {COMPARISON.map((row, i) => (
-            <div
-              key={row.row}
-              className="grid grid-cols-[140px_1fr_1fr] sm:grid-cols-[180px_1fr_1fr] gap-4 px-6 py-4 min-w-[480px]"
-              style={{
-                borderBottom:
-                  i < COMPARISON.length - 1 ? "1px solid #1a1a2e" : "none",
-              }}
-            >
-              <span
-                className="text-[10px] sm:text-[11px] tracking-wider"
-                style={{ fontFamily: "var(--font-mono)", color: "#666666" }}
-              >
-                {row.row}
-              </span>
-              <span
-                className="text-[11px] sm:text-xs text-center"
-                style={{ fontFamily: "var(--font-mono)", color: "#999999" }}
-              >
-                {row.btc}
-              </span>
-              <span
-                className="text-[11px] sm:text-xs text-center"
-                style={{ fontFamily: "var(--font-mono)", color: "#e8e6e3" }}
-              >
-                {row.hoge}
-              </span>
-            </div>
-          ))}
         </div>
       </div>
 
