@@ -6,11 +6,15 @@ import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
   { label: "PROPHECY", href: "/#prophecy", hash: true },
-  { label: "ORACLE TERMINAL", href: "/#oracle-terminal", hash: true },
   { label: "LEGENDS", href: "/legends", hash: false },
   { label: "ARCHIVES", href: "/prophecy-archives", hash: false },
+  { label: "PREDICT", href: "/predict", hash: false },
   { label: "HIBERNATE", href: "/hibernate", hash: false },
-  { label: "CARDS", href: "/cards", hash: false },
+  { label: "$ELIXIR", href: "/elixir", hash: false },
+  { label: "INNER CIRCLE", href: "/inner-circle", hash: false },
+  { label: "RIVALS", href: "/rivals", hash: false },
+  { label: "DAO", href: "/dao", hash: false },
+  { label: "MERCH", href: "/merch", hash: false },
 ] as const;
 
 export default function NavHeader() {

@@ -77,3 +77,14 @@ body {
 .animate-blink {
   animation: blink 1s steps(1) infinite;
 }
+
+/* Merch card hover */
+.merch-card {
+  background-color: #0a0a14;
+  border: 1px solid #1a1a2e;
+}
+
+.merch-card:hover {
+  border-color: rgba(255, 170, 0, 0.4);
+  box-shadow: 0 0 20px rgba(255, 170, 0, 0.06);
+}
