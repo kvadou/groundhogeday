@@ -67,7 +67,7 @@ The world of animal weather prediction is deeply unhinged:
 - **Concord Casimir** (Ohio) — a cat. Delivers weather forecasts based on how he eats his annual Groundhog Day meal of pierogies.
 - **Stumptown Fil** (Portland, OR) — a beaver. Makes predictions by choosing between two treats placed on logs.
 - **Potomac Phil** (Washington D.C.) — a stuffed, taxidermied, dead groundhog who annually predicts six more months of "political gridlock." Has been formally accused of collusion.
-- **Buffalo Bert** (Buffalo, NY) — engineered to always see his shadow, guaranteeing a 100% accuracy rate. The system is rigged and this is not disputed.
+- **Buffalo Bert** (Buffalo, NY) — engineered to always see his shadow. The system is openly staged. The Inner Circle dismisses him as a false prophet.
 - **Birmingham Jill** (Alabama) — an opossum who replaced the retired Birmingham Bill.
 - **Chuckles** (Connecticut) — predicted early spring in 2024, then a massive storm hit. Police issued an arrest warrant for "Chuck the Liar."
 - **Milltown Mel** (New Jersey) — died before the 2022 ceremony. NJ rabies laws prevented replacement. The governor vetoed a bill to fix it.

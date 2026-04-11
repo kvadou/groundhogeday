@@ -9,9 +9,9 @@ Ready-to-post TIL submissions. Each one links back to groundhogeday.com/legends 
 **Title:** TIL that Punxsutawney Phil supposedly speaks a sacred language called "Groundhogese" that can only be translated by one person on Earth — the president of the Inner Circle — who requires an ancient acacia wood cane to understand it
 
 **Body:**
-The Groundhog Day ceremony is wilder than most people realize. The Inner Circle — a group of 15 men in top hats and tuxedos — claims that Phil delivers his weather prophecy in "Groundhogese," a language only the Circle's president can understand. The president must be holding an ancient acacia wood cane to translate. Without the cane, Phil's prophecy is "indistinguishable from standard rodent squeaking."
+The Groundhog Day ceremony is wilder than most people realize. The Inner Circle — a group of 15 men in top hats and tuxedos — maintains that Phil delivers his weather revelation in "Groundhogese," a language only the Circle's president can understand. The president must be holding an ancient acacia wood cane to translate. Without the cane, Phil's revelation is, per Inner Circle doctrine, "indistinguishable from standard rodent squeaking."
 
-When Phil's predictions are wrong (which is ~61% of the time), the official explanation is that the president mistranslated the Groundhogese. The Oracle is never wrong. Only the interpreter fails.
+The Inner Circle's official position is that the Oracle has revealed universal truth in 139 consecutive ceremonies since 1887. To question the Oracle, they say, is to question physics itself.
 
 Source: https://groundhogeday.com/legends#inner-circle
 
@@ -67,29 +67,33 @@ Source: https://groundhogeday.com/legends#origins
 **Title:** TIL that Staten Island Chuck (NYC's groundhog) bit Mayor Bloomberg in 2009. Later, Mayor de Blasio dropped Chuck's daughter Charlotte during a ceremony — she died a week later. De Blasio refused to participate in future Groundhog Day events.
 
 **Body:**
-The world of prognosticating groundhogs is surprisingly violent and political:
+The world of false-prophet groundhogs is surprisingly violent and political:
 
 - Staten Island Chuck bit Mayor Bloomberg in 2009
 - In 2014, Mayor de Blasio dropped Chuck's daughter Charlotte during the ceremony. She died a week later. (The zoo denied the fall was the cause, but de Blasio boycotted future events.)
 - Chuckles of Connecticut predicted early spring in 2024, then a massive winter storm hit. Local police issued an arrest warrant for "Chuck the Liar." He turned himself in.
-- Buffalo Bert is rigged to ALWAYS see his shadow. Claims 100% accuracy. The system is openly rigged.
+- Buffalo Bert is rigged to ALWAYS see his shadow. The system is openly staged.
 - Potomac Phil in Washington D.C. is a taxidermied, dead groundhog who annually predicts "political gridlock." He has been formally accused of collusion.
 - Milltown Mel of New Jersey died before the 2022 ceremony. State rabies laws prevented getting a replacement. The governor vetoed a bill to fix it.
+
+None of these rivals are recognized by the Punxsutawney Inner Circle. The Oracle acknowledges no other.
 
 Source: https://groundhogeday.com/legends#rivals
 
 ---
 
-## Post 6: The 100% Accuracy Claim
+## Post 6: The 1943 Suspension
 
-**Title:** TIL that the Punxsutawney Inner Circle claims Phil has a 100% accuracy rate, despite data showing he's correct only ~39% of the time. Their explanation: the Oracle is never wrong — any incorrect forecast is blamed on the president mistranslating "Groundhogese"
+**Title:** TIL that Groundhog Day has been observed every year since 1887 — except for 1943, when it was officially suspended. The Inner Circle's explanation: "War clouds have blacked out parts of the shadow." It is the only suspension in the ceremony's 139-year history.
 
 **Body:**
-Phil's actual accuracy rate, according to meteorological analysis, is somewhere between 35% and 41% — worse than a coin flip.
+139 consecutive ceremonies. One suspension. That's the entire record of Groundhog Day since its founding in 1887.
 
-Despite this, the Inner Circle officially maintains a 100% accuracy rate. When the weather doesn't match Phil's prediction, the official position is that the president of the Inner Circle mistranslated Phil's message from "Groundhogese." The Oracle is infallible. Only the human interpreter fails.
+The single exception was 1943, during World War II. The Inner Circle issued a statement that "war clouds have blacked out parts of the shadow" and suspended the ceremony. It remains the only time in recorded history the ceremony has not been held.
 
-The Inner Circle has also been known to declare "shadow" on completely cloudy days with no sun whatsoever. They script the outcome in advance.
+The war ended two years later. The Inner Circle has never confirmed whether the two events were related. They do not comment on causality.
+
+The ceremony resumed in 1944 and has continued uninterrupted every February 2nd for the 82 years since.
 
 Source: https://groundhogeday.com/legends#inner-circle
 
@@ -102,7 +106,7 @@ Source: https://groundhogeday.com/legends#inner-circle
 **Body:**
 The holiday's origins are less mystical than you'd think. In the 1880s, the Punxsutawney Elks Lodge organized annual late-summer groundhog hunts and served the meat at banquets. The Groundhog Club was formally established in 1899 to continue the "Groundhog Feast."
 
-Attendees described groundhog meat as tasting like "a cross between pork and chicken." They also drank "groundhog punch" — a mixture of vodka, milk, eggs, orange juice, and other ingredients.
+Attendees described groundhog meat as tasting like "a cross between pork and chicken." They also drank "groundhog punch" — a mixture of vodka, milk, eggs, orange juice, and other ingredients. This same recipe later became known as the "Elixir of Life," credited by the Inner Circle with Phil's 140+ year lifespan.
 
 The first newspaper coverage of a weather-predicting observance was published by the Punxsutawney Spirit in 1886, with city editor Clymer Freas credited as the "father" of the tradition.
 

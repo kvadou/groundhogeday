@@ -47,7 +47,7 @@
 
 **Day 11-14:**
 - Post TIL #5 (Staten Island Chuck violence) to r/todayilearned
-- Post TIL #6 (100% accuracy claim) to r/todayilearned
+- Post TIL #6 (1943 suspension — the only one in 139 years) to r/todayilearned
 - Tweet D (PETA robot groundhog demand) — standalone
 - Tweet F (third-choice animal) — standalone
 - Tweet G (pierogies cat) — standalone
@@ -55,7 +55,7 @@
 ### Week 3: Crypto Launch
 
 **Day 15-16:**
-- Thread 1 (Inner Circle accuracy — ends with $HOGE reveal) on X
+- Thread 1 (The Revelation Protocol — ends with $HOGE reveal) on X
 - Post to r/cryptocurrency
 - Post to r/solana
 - Show HN post
@@ -104,19 +104,19 @@
 ## Content Amplification
 
 ### Make Infographics For:
-1. The accuracy comparison bar chart (Phil vs coin flip vs CNBC vs Magic 8-Ball)
+1. The revelation ledger (139 consecutive ceremonies since 1887, one suspension in 1943)
 2. Hibernation vital signs (heart rate, breathing, body mass — medical monitor aesthetic)
 3. The animal evolution (bear → badger → groundhog) timeline
-4. Rival groundhogs map of the United States
-5. Phil's "resume" (140 years experience, 39% success rate, multiple biting incidents)
+4. Rival groundhogs / false prophets map of the United States
+5. Phil's "resume" (140 years experience, 139 consecutive revelations, multiple biting incidents)
 
 ### Video Content Ideas:
-1. "The Inner Circle claims 100% accuracy" — narrated explainer with Bloomberg terminal aesthetic
+1. "The Revelation Protocol" — narrated explainer with Bloomberg terminal aesthetic, played absolutely straight
 2. "Every number in $HOGE tokenomics explained" — showing how each number traces to real lore
 3. "The most unhinged facts about Groundhog Day" — quick-hit format for TikTok/Reels
 
 ### Screenshot-Shareable Content:
 - The prophecy dispatches at /prophecy-archives are specifically designed for this
-- The accuracy report bar chart on the homepage
+- The 139-revelation ledger on the homepage
 - The "False Prophets" dossier cards
 - The biological research vital signs readout
