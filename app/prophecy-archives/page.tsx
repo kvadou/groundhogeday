@@ -14,10 +14,10 @@ type Dispatch = {
 
 const DISPATCHES: Dispatch[] = [
   {
-    id: "decree-0039",
+    id: "decree-0100",
     type: "DECREE",
-    number: "#0039",
-    text: "The Oracle's accuracy rate of 39% is not a limitation. It is a feature. The Oracle sees all possible futures simultaneously and selects the most entertaining one.",
+    number: "#0100",
+    text: "The Oracle's accuracy rate is 100%. This is not a claim. This is the only possible accuracy rate for an entity that does not predict, but reveals. The Oracle is informed of the weather by the universe. To question the Oracle is to question physics.",
   },
   {
     id: "dispatch-1943",
@@ -71,7 +71,7 @@ const DISPATCHES: Dispatch[] = [
     id: "alert-0050",
     type: "ALERT",
     number: "#0050",
-    text: "The coin flip has a 50% accuracy rate. The Oracle has a 39% accuracy rate. The Oracle maintains that coin flips lack gravitas and should not be used for meteorological decisions.",
+    text: "The coin flip has a 50% accuracy rate. The Oracle has a 100% accuracy rate. The Oracle maintains that coin flips lack gravitas and should not be used for meteorological decisions. Or any decisions.",
   },
   {
     id: "memorandum-1961",
@@ -86,10 +86,10 @@ const DISPATCHES: Dispatch[] = [
     text: "The Oracle communicates exclusively in Groundhogese. Translation requires an ancient acacia wood cane. Without the cane, his prophecies are indistinguishable from standard rodent squeaking.",
   },
   {
-    id: "dispatch-0039b",
+    id: "dispatch-revelation",
     type: "DISPATCH",
-    number: "#0039B",
-    text: "The Inner Circle maintains a 100% accuracy rate. When the weather disagrees with the Oracle, the official position is that the president mistranslated the Groundhogese. The Oracle is never wrong. Only the interpreter fails.",
+    number: "#0139",
+    text: "The Oracle has revealed the universal truth 139 consecutive times since 1887. There has been one suspension (1943, war clouds). There has never been a wrong revelation. The Oracle does not predict. The Oracle reveals. There is no failure mode.",
   },
   {
     id: "advisory-0007",

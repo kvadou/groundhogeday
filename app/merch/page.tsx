@@ -20,7 +20,7 @@ const PRODUCTS: Product[] = [
   {
     name: '"THE ORACLE HAS SPOKEN" TEE',
     description:
-      'Classic black tee. Front: Groundhoge Day logo. Back: "The Oracle\'s accuracy rate stands at 39%. Invest accordingly."',
+      'Classic black tee. Front: Groundhoge Day logo. Back: "To question the Oracle is to question physics."',
     price: "$39.00",
     badge: "COMING SOON",
     requisitionId: "TEE-ORACLE-001",
@@ -50,12 +50,12 @@ const PRODUCTS: Product[] = [
     requisitionId: "HAT-IC-004",
   },
   {
-    name: '"39% ACCURACY" DAD CAP',
+    name: '"100% REVELATION" DAD CAP',
     description:
-      'Embroidered. "39% of the time, it works every time."',
+      'Embroidered. "139 consecutive revelations. Zero failures. The Oracle reveals."',
     price: "$29.00",
     badge: "COMING SOON",
-    requisitionId: "CAP-39-005",
+    requisitionId: "CAP-100-005",
   },
   {
     name: '"ELIXIR OF LIFE" MUG',

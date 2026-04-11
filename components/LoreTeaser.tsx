@@ -40,7 +40,7 @@ const cards: ArchiveCard[] = [
     stampLabel: "CLASSIFIED",
     stampColor: "#4488ff",
     description:
-      "Screenshot-ready infographic cards. Phil\u2019s resume. The accuracy report. Rival oracle dossiers. Designed for maximum social engagement.",
+      "Screenshot-ready infographic cards. The Oracle\u2019s revelation record. Rival oracle dossiers. Designed for maximum social engagement.",
     statsLine: "6 CARDS \u00b7 1200\u00d7675 \u00b7 SCREENSHOT & SHARE",
     linkLabel: "VIEW CARDS",
   },

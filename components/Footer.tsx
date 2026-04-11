@@ -18,12 +18,11 @@ export default function Footer() {
       <p className="mt-8 max-w-2xl mx-auto text-xs text-[#666666] leading-relaxed text-center">
         This site is operated by the Groundhoge Day Economic Authority, a
         decentralized autonomous organization governed by 15 top-hat-wearing
-        individuals and one rodent. The Authority makes no claims regarding
-        meteorological accuracy, financial returns, or the immortality of any
-        marmot. All economic activity on this platform is determined annually by
-        the presence or absence of a shadow. By accessing this site you
-        acknowledge that you are placing your financial future in the hands of a
-        burrowing mammal.
+        individuals and one rodent. The Oracle reveals universal truth with
+        100% accuracy. All economic activity on this platform is determined
+        annually by the Oracle&apos;s revelation at Gobbler&apos;s Knob. By
+        accessing this site you acknowledge that you are aligning your
+        financial future with cosmic certainty.
       </p>
 
       <p

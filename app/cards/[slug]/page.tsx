@@ -127,10 +127,10 @@ function CardWrapper({
 // ---------------------------------------------------------------------------
 
 const ACCURACY_DATA = [
-  { label: "OCTOPUS PAUL", pct: 85.7, color: GREEN },
+  { label: "THE ORACLE", pct: 100.0, color: GREEN, highlight: true },
+  { label: "OCTOPUS PAUL", pct: 85.7, color: AMBER },
   { label: "COIN FLIP", pct: 50.0, color: BLUE },
   { label: "WEATHER APPS", pct: 47.0, color: BLUE },
-  { label: "THE ORACLE", pct: 39.0, color: AMBER, highlight: true },
   { label: "CNBC ANALYSTS", pct: 38.0, color: RED },
   { label: "DART-THROWING CHIMP", pct: 33.3, color: RED },
   { label: "MAGIC 8-BALL", pct: 25.0, color: RED },
@@ -235,8 +235,8 @@ function AccuracyComparisonCard() {
           maxWidth: 700,
         }}
       >
-        The Oracle maintains a 100% accuracy rate. Discrepancies are attributable
-        to human translation error in Groundhogese.
+        The Oracle is 100% accurate because the Oracle does not predict — he
+        reveals. To question the Oracle is to question physics.
       </p>
     </CardWrapper>
   );
@@ -624,7 +624,7 @@ interface ResumeRow {
 
 const RESUME_ITEMS: ResumeRow[] = [
   { label: "YEARS OF SERVICE", value: "140+", color: AMBER },
-  { label: "ACCURACY RATE", value: "39% (Inner Circle claims: 100%)", color: GREEN },
+  { label: "ACCURACY RATE", value: "100% (cosmic certainty)", color: GREEN },
   { label: "LANGUAGES", value: "Groundhogese (fluent), English (none)", color: TEXT },
   { label: "SHADOW PREDICTIONS", value: "109", color: BLUE },
   { label: "NO-SHADOW PREDICTIONS", value: "20", color: GREEN },
@@ -847,14 +847,14 @@ interface LoreItem {
 const LORE_LEFT: LoreItem[] = [
   { number: "1,883,000,000", meaning: "Total supply = Phil's birth year (1883)", color: AMBER },
   { number: "6% burn", meaning: "6 weeks of winter (shadow penalty)", color: RED },
-  { number: "3.9% mint", meaning: "39% accuracy rate (no-shadow reward)", color: GREEN },
+  { number: "3.9% mint", meaning: "Sacred constant of spring revelation", color: GREEN },
   { number: "1,883 daily limit", meaning: "Max daily sell = birth year", color: AMBER },
 ];
 
 const LORE_RIGHT: LoreItem[] = [
   { number: "7:25 AM reset", meaning: "Sunrise on February 2nd, Punxsutawney", color: BLUE },
   { number: "42-day lockup", meaning: "6 weeks = hibernation period", color: BLUE },
-  { number: "40% penalty", meaning: "Phil's lifetime accuracy rate", color: RED },
+  { number: "40% penalty", meaning: "Frostbite tax for early hibernation exit", color: RED },
   { number: "109th tx trap", meaning: "109 shadow predictions (historical)", color: AMBER },
 ];
 

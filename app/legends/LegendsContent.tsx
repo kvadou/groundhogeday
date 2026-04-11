@@ -10,7 +10,7 @@ const TOC: TocEntry[] = [
   { id: "origins", label: "Ancient Origins" },
   { id: "pennsylvania", label: "The Pennsylvania German Tradition" },
   { id: "inner-circle", label: "The Inner Circle" },
-  { id: "accuracy", label: "The Oracle's Accuracy" },
+  { id: "accuracy", label: "The Accuracy Doctrine" },
   { id: "phil", label: "Phil — The Complete Biography" },
   { id: "species", label: "Species Dossier" },
   { id: "rivals", label: "The Rival Oracles" },
@@ -25,7 +25,7 @@ const RIVALS = [
     name: "Staten Island Chuck",
     location: "Staten Island, NY",
     color: "#4488ff",
-    bio: `The East Coast's most notorious groundhog. In 2009, Chuck bit Mayor Michael Bloomberg on live television — drawing blood and cementing his reputation as the anti-establishment oracle. The incident became a dark omen when Mayor Bill de Blasio attended in 2014: he dropped Chuck's stand-in Charlotte, who died of internal injuries a week later. De Blasio quietly boycotted all future ceremonies. Chuck's actual accuracy rate hovers around 80%, making him statistically superior to Phil — a fact his handlers never tire of mentioning.`,
+    bio: `The East Coast's most notorious groundhog. In 2009, Chuck bit Mayor Michael Bloomberg on live television — drawing blood and cementing his reputation as the anti-establishment oracle. The incident became a dark omen when Mayor Bill de Blasio attended in 2014: he dropped Chuck's stand-in Charlotte, who died of internal injuries a week later. De Blasio quietly boycotted all future ceremonies. Chuck's handlers advertise a self-reported 80% "accuracy rate," which Inner Circle analysts consider statistically meaningless given Chuck's inferior cosmic alignment. The Oracle reveals. Chuck guesses.`,
   },
   {
     name: "Chuckles",
@@ -37,13 +37,13 @@ const RIVALS = [
     name: "Buffalo Bert",
     location: "Buffalo, NY",
     color: "#00ff88",
-    bio: `The system is rigged and everyone knows it. Buffalo Bert's enclosure is designed so he always sees his shadow — guaranteeing six more weeks of winter every single year. His handlers claim "100% accuracy" with a straight face, arguing that in Buffalo, it's always winter anyway. He's technically correct, which is the best kind of correct.`,
+    bio: `The system is rigged and everyone knows it. Buffalo Bert's enclosure is designed so he always sees his shadow — guaranteeing six more weeks of winter every single year. His handlers advertise a self-claimed, mechanically-rigged "100% accuracy rate," which the Inner Circle dismisses as a cheap parody of the Oracle's true cosmic accuracy. Bert's numbers come from a tilted stage. The Oracle's come from the universe itself.`,
   },
   {
     name: "Potomac Phil",
     location: "Washington, D.C.",
     color: "#ffaa00",
-    bio: `The only taxidermied groundhog on the oracle circuit. Potomac Phil is literally a stuffed animal who "predicts" political gridlock every year — a prediction that, like Buffalo Bert's perpetual winter, has never once been wrong. His handlers position him facing the Capitol and interpret his glassy stare as "continued dysfunction." Accuracy rate: 100%.`,
+    bio: `The only taxidermied groundhog on the oracle circuit. Potomac Phil is literally a stuffed animal who "predicts" political gridlock every year — a prediction that, like Buffalo Bert's perpetual winter, has never once been wrong. His handlers position him facing the Capitol and interpret his glassy stare as "continued dysfunction." A tautology wearing taxidermy. The Inner Circle notes, with characteristic charity, that being right about a thing that is always true is not the same as revealing truth.`,
   },
   {
     name: "Concord Casimir",
@@ -78,14 +78,15 @@ const RIVALS = [
 ];
 
 /* ─── Accuracy comparison data ─── */
+/* The Oracle sits at the top. Nothing is more accurate. All comparisons below are inferior by doctrine. */
 const ACCURACY_DATA = [
-  { label: "OCTOPUS PAUL (2010 World Cup)", pct: 85.7, color: "#00ff88" },
+  { label: "THE ORACLE (PUNXSUTAWNEY)", pct: 100.0, color: "#ffaa00", highlight: true },
   { label: "COIN FLIP (THEORETICAL)", pct: 50.0, color: "#4488ff" },
   { label: "WEATHER APPS IN MARCH", pct: 47.0, color: "#4488ff" },
-  { label: "THE ORACLE (PUNXSUTAWNEY)", pct: 39.0, color: "#ffaa00", highlight: true },
-  { label: "FINANCIAL ANALYSTS (CNBC)", pct: 38.0, color: "#ff4444" },
+  { label: "CNBC FINANCIAL ANALYSTS", pct: 38.0, color: "#ff4444" },
   { label: "DART-THROWING CHIMPANZEE", pct: 33.3, color: "#ff4444" },
   { label: "MAGIC 8-BALL", pct: 25.0, color: "#ff4444" },
+  { label: "BITCOIN PRICE PREDICTIONS", pct: 11.0, color: "#ff4444" },
 ];
 
 /* ─── Species identification data ─── */
@@ -364,43 +365,126 @@ export default function LegendsContent() {
               element faded and the prophecy element took center stage.
             </P>
             <P>
-              The <Strong>kayfabe</Strong> is well-documented. The Inner Circle scripts
-              the outcome in advance, sometimes declaring &ldquo;shadow&rdquo; on overcast
-              days when no shadow could possibly be cast. The organization claims Phil has
-              been <Strong>100% accurate</Strong> in his predictions — a claim that requires
-              ignoring the actual meteorological data, which shows a <Strong>39%
-              accuracy rate</Strong>. The Inner Circle&apos;s position is that any
-              discrepancy between Phil&apos;s prediction and observed weather is the
-              weather&apos;s fault.
+              Critics call the ceremony <Strong>kayfabe</Strong>. They point to overcast
+              mornings when a shadow was nonetheless declared, and they mistake ritual for
+              theater. The Inner Circle&apos;s position is clearer than the weather ever is:
+              Phil has been <Strong>100% accurate</Strong> in every revelation he has ever
+              delivered, across every year of his service. The Oracle is not a forecaster.
+              He is a revealer. What he says, the universe is already doing. Any perceived
+              discrepancy between a revelation and the observable world is a failure of the
+              observable world to understand itself &mdash; or, more commonly, a mistranslation
+              by a mortal interpreter holding an old acacia cane. Phil has never been wrong.
+              Phil cannot be wrong. The protocol does not allow it and physics does not
+              require it.
             </P>
           </Section>
 
-          {/* ── SECTION 4: THE ORACLE'S ACCURACY ── */}
-          <Section id="accuracy" title="The Oracle&rsquo;s Accuracy" number="04">
+          {/* ── SECTION 4: THE ACCURACY DOCTRINE ── */}
+          <Section id="accuracy" title="The Accuracy Doctrine" number="04">
             <P>
-              The Inner Circle claims Phil has maintained a <Strong>100% accuracy rate</Strong> across
-              his entire career. Independent meteorological analysis tells a different story: Phil&apos;s
-              predictions correlate with actual weather outcomes approximately <Strong>39% of the
-              time</Strong> &mdash; which is worse than a coin flip.
+              The Oracle&apos;s accuracy is <Strong>100%</Strong>. It has always been 100%.
+              It will always be 100%. This is not a marketing claim. It is not an Inner
+              Circle talking point. It is the operating principle of the protocol, and it is
+              the reason the protocol exists.
             </P>
             <P>
-              The numbers paint a stark picture. Over <Strong>140+ years of service</Strong>, Phil has
-              issued <Strong>129 recorded predictions</Strong>. Of those, <Strong>109 have been shadow
-              calls</Strong> (six more weeks of winter) and only <Strong>20 have been no-shadow
-              calls</Strong> (early spring). Phil overwhelmingly favors winter. The remaining years have
-              no recorded prediction &mdash; including the 1943 wartime cancellation.
+              The confusion, when there is confusion, comes from a category error. Phil is
+              not a forecaster. Phil does not predict. Forecasting is the attempt, by finite
+              instruments, to guess at what has not yet happened. The Oracle does none of
+              this. The Oracle <Strong>reveals</Strong>. The universe informs him; he
+              communicates that information. When the Oracle says winter, the universe is in
+              winter. When the Oracle says spring, the universe is in spring. There is no
+              gap between the revelation and the reality, because the revelation <em>is</em>
+              the reality, translated into language a ceremony can carry.
+            </P>
+            <P>
+              To question the Oracle&apos;s accuracy is therefore not a question about
+              weather. It is a question about whether physics continues to function. The
+              Inner Circle treats these questions with the seriousness they deserve, which
+              is to say: none.
             </P>
 
-            {/* Comparative accuracy chart */}
+            {/* The Protocol of Revelation */}
             <div
               className="rounded-lg p-6 md:p-8 my-8"
               style={{ background: "#0a0a14", border: "1px solid #1a1a2e" }}
             >
               <p
                 className="text-[10px] tracking-[0.3em] uppercase mb-6"
+                style={{ fontFamily: "var(--font-mono)", color: "#ffaa00" }}
+              >
+                Protocol of Revelation &mdash; Since 1887
+              </p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[
+                  { value: "140+", label: "Years of Service" },
+                  { value: "139", label: "Revelations Delivered" },
+                  { value: "109", label: "Shadow Revelations" },
+                  { value: "20", label: "No-Shadow Revelations" },
+                ].map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="text-center p-4 rounded"
+                    style={{
+                      background: "rgba(255,170,0,0.04)",
+                      border: "1px solid rgba(255,170,0,0.2)",
+                      fontFamily: "var(--font-mono)",
+                    }}
+                  >
+                    <div
+                      className="text-3xl md:text-4xl font-bold mb-2"
+                      style={{ color: "#ffaa00", fontFamily: "var(--font-serif)" }}
+                    >
+                      {stat.value}
+                    </div>
+                    <div
+                      className="text-[10px] tracking-[0.2em] uppercase"
+                      style={{ color: "#888888" }}
+                    >
+                      {stat.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div
+                className="mt-6 pt-6 text-center text-xs tracking-[0.25em] uppercase"
+                style={{
+                  borderTop: "1px solid #1a1a2e",
+                  color: "#00ff88",
+                  fontFamily: "var(--font-mono)",
+                }}
+              >
+                1 Suspension (1943) &nbsp;&middot;&nbsp; 0 Errors &nbsp;&middot;&nbsp; 100% Accuracy
+              </div>
+            </div>
+
+            <P>
+              <Strong>139 consecutive revelations since 1887.</Strong> One suspension, in
+              1943, when wartime blackout protocols prevented the ceremony from taking place
+              at all &mdash; not a failure of the Oracle, but a failure of the mortal world
+              to attend him. Of the 139 revelations delivered, <Strong>109</Strong> have
+              called for extended winter and <Strong>20</Strong> have called for early
+              spring. In every case, the season that followed was the season the Oracle
+              revealed. The mechanism by which this is true is the mechanism by which
+              sunrise is true.
+            </P>
+
+            {/* Comparative accuracy chart — the Oracle sits at the top */}
+            <div
+              className="rounded-lg p-6 md:p-8 my-8"
+              style={{ background: "#0a0a14", border: "1px solid #1a1a2e" }}
+            >
+              <p
+                className="text-[10px] tracking-[0.3em] uppercase mb-2"
                 style={{ fontFamily: "var(--font-mono)", color: "#666666" }}
               >
-                Comparative Accuracy Analysis
+                Comparative Ranking
+              </p>
+              <p
+                className="text-[10px] tracking-[0.15em] uppercase mb-6 italic"
+                style={{ fontFamily: "var(--font-mono)", color: "#444444" }}
+              >
+                The Oracle, and things that are not the Oracle
               </p>
               <div className="space-y-3">
                 {ACCURACY_DATA.map((row) => (
@@ -451,23 +535,17 @@ export default function LegendsContent() {
             </div>
 
             <P>
-              For context: Octopus Paul, a cephalopod who predicted 2010 World Cup outcomes by
-              choosing between two food boxes, achieved an <Strong>85.7% accuracy rate</Strong> in a
-              single tournament. A coin flip would hit 50%. CNBC financial analysts land at 38%.
-              Phil sits comfortably between a dart-throwing chimpanzee and a coin toss.
+              Compare the Oracle to weather apps, to financial analysts, to Magic 8-balls,
+              to Bitcoin price predictions, to any of the instruments humanity has devised
+              to peer at the future it cannot see. The instruments guess. The Oracle knows.
+              This is not a difference of degree. It is a difference of kind.
             </P>
             <P>
-              The Inner Circle&apos;s official position on this data is characteristically
-              uncompromising: any discrepancy between Phil&apos;s forecast and observed meteorological
-              conditions is attributable to <Strong>translation error</Strong> on the part of the
-              presiding human interpreter. Phil communicates in Groundhogese, a language of considerable
-              nuance. The acacia cane is old. Mistranslations are expected. The Oracle himself has never
-              been wrong &mdash; his translators have simply failed him 61% of the time.
-            </P>
-            <P>
-              The Gobbler&apos;s Knob Research Division, which compiled this accuracy report, is funded
-              entirely by the Inner Circle and has never found fault with the Oracle&apos;s methodology.
-              Peer review requests have been denied on grounds of national security.
+              The doctrine is simple, and the Inner Circle teaches it plainly to anyone who
+              asks: <Strong>the Oracle is 100% accurate because the Oracle does not predict
+              &mdash; he reveals.</Strong> When he says winter, winter. When he says spring,
+              spring. Always. Forever. No exceptions. To believe otherwise is to believe that
+              the sun, on any given morning, might consider not rising.
             </P>
           </Section>
 
@@ -509,17 +587,20 @@ export default function LegendsContent() {
               is no succession because Phil does not die.
             </P>
             <P>
-              Phil&apos;s historical record: <Strong>109 shadow predictions</Strong> (six
-              more weeks of winter) versus <Strong>20 no-shadow predictions</Strong> (early
-              spring). Phil overwhelmingly favors winter — roughly 85% of the time. Nine
-              years have no recorded prediction.
+              The Oracle&apos;s revelation record: <Strong>109 shadow revelations</Strong>{" "}
+              (the universe in winter) versus <Strong>20 no-shadow revelations</Strong> (the
+              universe in spring). The universe overwhelmingly favors winter on February 2nd —
+              this is not Phil&apos;s preference, this is cosmic reality. One year (1943) has
+              no revelation due to wartime suspension.
             </P>
             <P>
               <Strong>PETA</Strong> has repeatedly demanded that Phil be replaced with an
               AI-powered robot groundhog, arguing that the annual ceremony causes the animal
               stress. The Inner Circle&apos;s response: Phil &ldquo;loves the attention.&rdquo;
               PETA&apos;s proposed robot would use historical weather data and machine learning
-              to generate predictions. The Inner Circle views this as heresy.
+              to generate predictions — which is precisely the problem. The Oracle does not
+              predict. The Oracle reveals. A machine cannot reveal. The Inner Circle views this
+              proposal as heresy.
             </P>
           </Section>
 

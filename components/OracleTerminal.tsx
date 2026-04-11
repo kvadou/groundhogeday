@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
-import { predictions, getMarketImpact } from "@/lib/shadow-history";
+import { predictions, getSupplyEvent } from "@/lib/shadow-history";
 import type { Prediction } from "@/lib/shadow-history";
 import { useInView } from "@/hooks/useInView";
 import { getSwapQuote, getPoolReserves, executeSwap } from "@/lib/swap";
@@ -18,16 +18,14 @@ function getDuration(p: Prediction): string {
   return p.shadow ? "6 WKS WINTER" : "EARLY SPRING";
 }
 
-function getAccuracyLabel(p: Prediction): string {
-  switch (p.accuracy) {
-    case "correct":
-      return "CORRECT";
-    case "incorrect":
-      return "INCORRECT";
+function getStatusLabel(p: Prediction): string {
+  switch (p.status) {
+    case "revealed":
+      return "REVEALED";
     case "pending":
       return "PENDING";
-    case "no-record":
-      return "\u2014";
+    case "suspended":
+      return "SUSPENDED";
   }
 }
 
@@ -175,7 +173,7 @@ export default function OracleTerminal() {
         style={mono}
         className="text-xs tracking-widest text-[#ffaa00] text-center"
       >
-        GOBBLER&apos;S KNOB TERMINAL &mdash; SHADOW HISTORY DATABASE
+        GOBBLER&apos;S KNOB TERMINAL &mdash; REVELATION ARCHIVE
       </h2>
 
       {/* Data Table */}
@@ -189,8 +187,8 @@ export default function OracleTerminal() {
             <span>YEAR</span>
             <span>OUTCOME</span>
             <span>DURATION</span>
-            <span>ACCURACY</span>
-            <span>MARKET IMPACT</span>
+            <span>STATUS</span>
+            <span>SUPPLY EVENT</span>
           </div>
 
           {/* Rows */}
@@ -219,8 +217,8 @@ export default function OracleTerminal() {
                   <span>{p.year}</span>
                   <span>{getOutcome(p)}</span>
                   <span>{getDuration(p)}</span>
-                  <span>{getAccuracyLabel(p)}</span>
-                  <span>{getMarketImpact(p.shadow)}</span>
+                  <span>{getStatusLabel(p)}</span>
+                  <span>{getSupplyEvent(p.shadow)}</span>
                 </div>
               );
             })}
@@ -308,8 +306,8 @@ export default function OracleTerminal() {
           textShadow: "0 0 10px rgba(0,255,136,0.3)",
         }}
       >
-        TOTAL SHADOWS: 109 &nbsp;|&nbsp; TOTAL NO-SHADOWS: 20
-        &nbsp;|&nbsp; CAREER ACCURACY: 39%
+        TOTAL REVELATIONS: 139 &nbsp;|&nbsp; SHADOW: 109 &nbsp;|&nbsp; NO SHADOW: 20
+        &nbsp;|&nbsp; ACCURACY: 100%
       </div>
     </section>
   );
